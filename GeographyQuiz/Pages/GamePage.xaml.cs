@@ -16,15 +16,13 @@ using System.Windows.Shapes;
 namespace GeographyQuiz
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for GamePage.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class GamePage : Page
     {
-        public MainWindow()
+        public GamePage()
         {
             InitializeComponent();
-
-            DataContext = new WindowViewModel(this);
         }
     }
 }
