@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace GeographyQuiz.Pages
+namespace GeographyQuiz
 {
     /// <summary>
     /// A base page for all the pages

@@ -16,14 +16,13 @@ using System.Windows.Shapes;
 namespace GeographyQuiz
 {
     /// <summary>
-    /// Interaction logic for GamePage.xaml
+    /// Interaction logic for CapitalsPage.xaml
     /// </summary>
-    public partial class GamePage : BasePage<ChooseGameViewModel>
+    public partial class CapitalsPage : BasePage<CapitalsViewModel>
     {
-        public GamePage()
+        public CapitalsPage()
         {
             InitializeComponent();
-            
         }
     }
 }

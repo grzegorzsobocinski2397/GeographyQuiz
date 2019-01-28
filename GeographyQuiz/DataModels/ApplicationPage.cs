@@ -12,5 +12,10 @@ namespace GeographyQuiz
         /// Starting page for the application
         /// </summary>
         GamePage = 0,
+        /// <summary>
+        /// Page for the Capitals game
+        /// </summary>
+        CapitalsPage = 1,
+
     }
 }

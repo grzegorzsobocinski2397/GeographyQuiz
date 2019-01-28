@@ -57,5 +57,16 @@ namespace GeographyQuiz
             CurrentPage = ApplicationPage.GamePage;
         }
         #endregion
+
+        #region Public Methods
+        /// <summary>
+        /// Changes the current page
+        /// </summary>
+        /// <param name="page"></param>
+        public void ChangePage(ApplicationPage page)
+        {
+            CurrentPage = page;
+        }
+        #endregion
     }
 }

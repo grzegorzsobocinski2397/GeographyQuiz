@@ -52,7 +52,7 @@
         <Setter Property="Background" Value="White" />
         <Setter Property="Foreground" Value="{StaticResource ButtonForegroundBrush}" />
         <Setter Property="BorderThickness" Value="0" />
-
+        <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Padding" Value="1" />
@@ -69,9 +69,11 @@
                         <TextBlock
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            FontSize="{StaticResource FontSizeSemiLarge}"
+                            FontSize="{TemplateBinding FontSize}"
                             Foreground="{TemplateBinding Foreground}"
-                            Text="{TemplateBinding Content}" />
+                            Text="{TemplateBinding Content}"
+                            TextAlignment="Center"
+                            TextWrapping="WrapWithOverflow" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <EventTrigger RoutedEvent="MouseEnter">
