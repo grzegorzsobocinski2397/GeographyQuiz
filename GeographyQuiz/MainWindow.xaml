@@ -5,9 +5,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:GeographyQuiz"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    MinWidth="500"
     Width="550"
     Height="450"
+    ResizeMode="NoResize"
+    MinWidth="500"
     MinHeight="450"
     AllowsTransparency="True"
     WindowStartupLocation="CenterScreen"
@@ -25,11 +26,14 @@
                                 <!--  Window border and drop shadow  -->
                                 <Border
                                     x:Name="Container"
+                                    Background="White"
                                     CornerRadius="{Binding WindowCornerRadius}" />
                                 <!--  - Drop shadow  -->
-                                <Border Background="White" CornerRadius="{Binding WindowCornerRadius}" 
+                                <Border
+                                    Background="White"
                                     BorderBrush="Black"
-                                    BorderThickness="0.3">
+                                    BorderThickness="0.3"
+                                    CornerRadius="{Binding WindowCornerRadius}">
                                     <Border.Effect>
                                         <DropShadowEffect Opacity="0.5" ShadowDepth="0" />
                                     </Border.Effect>
@@ -64,7 +68,11 @@
                                             Content="X"
                                             Style="{StaticResource WindowCloseButton}" />
                                     </Grid>
-                                    <Border Grid.Row="1" Padding="5">
+                                    <Border
+                                        Grid.Row="1"
+                                        Background="{StaticResource ButtonBackgroundBrush}"
+                                        BorderBrush="Black"
+                                        BorderThickness="0.3">
                                         <ContentPresenter Content="{TemplateBinding Content}" />
                                     </Border>
                                 </Grid>
@@ -87,7 +95,7 @@
     <Border>
         <Frame
             x:Name="MainFrame"
-            Content="{Binding CurrentPage}"
+            Content="{Binding CurrentPage, Converter={local:ApplicationPageValueConverter}}"
             NavigationUIVisibility="Hidden" />
     </Border>
 </Window>

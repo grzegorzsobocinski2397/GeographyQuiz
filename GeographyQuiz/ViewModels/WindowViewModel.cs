@@ -34,6 +34,7 @@ namespace GeographyQuiz
         /// </summary>
         public CornerRadius WindowCornerRadius => new CornerRadius(windowCorner);
 
+        public ApplicationPage CurrentPage { get; set; } 
         #endregion
         #region Commands
         /// <summary>
@@ -41,6 +42,7 @@ namespace GeographyQuiz
         /// </summary>
         public ICommand CloseWindowCommand { get; set; }
         
+
         #endregion
         #region Constructor
         public WindowViewModel(Window window)
@@ -51,6 +53,8 @@ namespace GeographyQuiz
             // Creates commands
             CloseWindowCommand = new RelayCommand(() => window.Close());
 
+            // Sets the first page as GamePage
+            CurrentPage = ApplicationPage.GamePage;
         }
         #endregion
     }

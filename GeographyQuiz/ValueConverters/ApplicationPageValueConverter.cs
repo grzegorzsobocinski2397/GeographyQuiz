@@ -9,9 +9,11 @@ using System.Windows.Data;
 
 namespace GeographyQuiz
 {
-    public class ApplicationPageValueConverter : IValueConverter
+    public class ApplicationPageValueConverter : BaseValueConverter<ApplicationPageValueConverter>
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+      
+
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             switch ((ApplicationPage)value)
             {
@@ -20,10 +22,11 @@ namespace GeographyQuiz
                 default:
                     Debugger.Break();
                     return null;
-            }
+            };
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+       
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
