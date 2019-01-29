@@ -17,12 +17,14 @@
             <RowDefinition Height="Auto" />
             <!--  Choices  -->
             <RowDefinition Height="*" />
+            <!--  Number of questions left and number of questions answered correctly  -->
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!--  Question title  -->
         <TextBlock
             Grid.Row="0"
-            Margin="0,40,0,0"
+            Margin="0,10,0,0"
             FontSize="{StaticResource FontSizeLarge}"
             Foreground="Black"
             Text="{Binding Question}"
@@ -75,7 +77,16 @@
                 CommandParameter="{Binding FourthAnswer}"
                 Content="{Binding FourthAnswer}"
                 Style="{DynamicResource BaseButton}" />
-          
+
+
         </Grid>
+        <TextBlock
+            Grid.Row="2"
+            Margin="0,0,0,10"
+            FontSize="{StaticResource FontSizeSmall}"
+            Foreground="Black"
+            Text="{Binding ScoreInformation}"
+            TextAlignment="Center"
+            TextWrapping="WrapWithOverflow" />
     </Grid>
 </local:BasePage>

@@ -11,10 +11,15 @@ namespace GeographyQuiz
     public class CapitalsListViewModel : BaseViewModel
     {
         #region Public Properties
+
+        /// <summary>
+        /// Informs the user of his current score and how many questions he has yet to answer
+        /// </summary>
+        public string ScoreInformation { get; set; } 
         /// <summary>
         /// Number of questions answered correctly
         /// </summary>
-        public int CorrectAnswers { get; set; }
+        public int NumberOfCorrectAnswers { get; set; }
         /// <summary>
         /// Correct answer for the current question
         /// </summary>
@@ -85,6 +90,7 @@ namespace GeographyQuiz
             // Registers the message 
             MessengerInstance.Register<NotificationMessage<int>>(this, PrepareQuestions);
 
+
         }
         #endregion
         #region Private Methods
@@ -98,16 +104,19 @@ namespace GeographyQuiz
                 // Decrease number of questions by 1
                 NumberOfQuestionsLeft--;
                 // Increase user score by one
-                CorrectAnswers++;
-                // Clear current questions Observable Collection
+                NumberOfCorrectAnswers++;
+                // Clear current questions collection
                 CurrentQuestions.Clear();
                 // Start a new question
                 NextQuestion();
             }
             else
             {
+                // Decrease number of questions by 1
                 NumberOfQuestionsLeft--;
+                // Clear current questions collection
                 CurrentQuestions.Clear();
+                // Starts a new question
                 NextQuestion();
             }
         }
@@ -171,6 +180,8 @@ namespace GeographyQuiz
         /// </summary>
         private void NextQuestion()
         {
+            // Informs the user of his current score 
+            ScoreInformation = string.Format("{0} questions left, you answered {1} correctly", NumberOfQuestionsLeft, NumberOfCorrectAnswers);
 
             // Random numbers 
             int[] ChosenNumbers = Shuffle(NumberOfQuestionsLeft);
