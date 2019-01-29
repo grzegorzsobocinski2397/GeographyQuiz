@@ -15,7 +15,7 @@ namespace GeographyQuiz
         /// <summary>
         /// Page for the Capitals game
         /// </summary>
-        CapitalsPage = 1,
+        DifficultyPage = 1,
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using System.Windows.Input;
 
 namespace GeographyQuiz
 {
-    public class CapitalsViewModel : BaseViewModel
+    public class DifficultyViewModel : BaseViewModel
     {
 
         #region Public Properties
@@ -15,7 +16,6 @@ namespace GeographyQuiz
         /// Difficulty level chosen by the user
         /// </summary>
         public int DifficultyLevel { get; set; }
-        public bool IsDifficultyUserControlVisible { get; set; } = true;
         #endregion
         #region Commands
         /// <summary>
@@ -27,11 +27,10 @@ namespace GeographyQuiz
         /// <summary>
         /// Default constructor
         /// </summary>
-        public CapitalsViewModel()
+        public DifficultyViewModel()
         {   
-
             // Creates commands
-            DifficultyCommand = new RelayParameterCommand(async (parameter) => StartGame(parameter));
+            DifficultyCommand = new RelayParameterCommand((parameter) => StartGame(parameter));
         }
         #endregion
         #region Private Methods
@@ -40,9 +39,8 @@ namespace GeographyQuiz
             // Changes the difficulty level
             DifficultyLevel = int.Parse(parameter as string);
 
-            // Hides the Difficulty user control
-            IsDifficultyUserControlVisible = false;
-
+            // Sends the difficulty level inside MVVM Light notification message to the CapitalsViewModel
+            MessengerInstance.Send(new NotificationMessage<int>(DifficultyLevel, "DifficultyChosen"));
         }
         #endregion
     }

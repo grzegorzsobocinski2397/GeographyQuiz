@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace GeographyQuiz
 {
     /// <summary>
-    /// Interaction logic for CapitalsPage.xaml
+    /// Interaction logic for DifficultyPage.xaml
     /// </summary>
-    public partial class CapitalsPage : BasePage<CapitalsViewModel>
+    public partial class DifficultyPage : BasePage<DifficultyViewModel>
     {
-        public CapitalsPage()
+        public DifficultyPage()
         {
             InitializeComponent();
         }
