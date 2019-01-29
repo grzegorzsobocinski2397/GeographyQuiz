@@ -27,7 +27,7 @@ namespace GeographyQuiz
         public ChooseGameViewModel()
         {
             // Creates commands
-            CapitalsCommand = new RelayCommand(() => ((WindowViewModel)((MainWindow)Application.Current.MainWindow).DataContext).ChangePage(ApplicationPage.DifficultyPage));
+            CapitalsCommand = new RelayCommand(() => ChangePage(ApplicationPage.DifficultyPage));
            
         }
         #endregion

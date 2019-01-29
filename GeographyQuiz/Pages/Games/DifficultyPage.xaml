@@ -41,8 +41,6 @@
             <!--  Easy mode  -->
             <Button
                 Grid.Column="0"
-                Width="170"
-                Height="100"
                 Command="{Binding DifficultyCommand}"
                 CommandParameter="30"
                 Content="Łatwy                  (30 pytań)"
@@ -50,8 +48,6 @@
             <!--  Normal mode  -->
             <Button
                 Grid.Column="1"
-                Width="170"
-                Height="100"
                 Command="{Binding DifficultyCommand}"
                 CommandParameter="60"
                 Content="Normalny                  (60 pytań)"
@@ -59,8 +55,6 @@
             <!--  Hard game  -->
             <Button
                 Grid.Column="2"
-                Width="170"
-                Height="100"
                 Command="{Binding DifficultyCommand}"
                 CommandParameter="90"
                 Content="Trudny                  (90 pytań)"

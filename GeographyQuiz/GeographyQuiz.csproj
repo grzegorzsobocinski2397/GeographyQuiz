@@ -105,6 +105,9 @@
     <Compile Include="Pages\GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Games\Capitals\CapitalsGamePage.xaml.cs">
+      <DependentUpon>CapitalsGamePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Games\DifficultyPage.xaml.cs">
       <DependentUpon>DifficultyPage.xaml</DependentUpon>
     </Compile>
@@ -133,6 +136,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Pages\GamePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Games\Capitals\CapitalsGamePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -220,7 +227,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Pages\Games\Capitals\" />
     <Folder Include="UserControls\Capitals\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

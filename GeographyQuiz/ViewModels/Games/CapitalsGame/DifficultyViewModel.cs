@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace GeographyQuiz
 {
@@ -39,8 +40,12 @@ namespace GeographyQuiz
             // Changes the difficulty level
             DifficultyLevel = int.Parse(parameter as string);
 
+            ChangePage(ApplicationPage.CapitalsGame);
+
             // Sends the difficulty level inside MVVM Light notification message to the CapitalsViewModel
             MessengerInstance.Send(new NotificationMessage<int>(DifficultyLevel, "DifficultyChosen"));
+
+
         }
         #endregion
     }

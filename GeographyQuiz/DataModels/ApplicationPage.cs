@@ -13,9 +13,13 @@ namespace GeographyQuiz
         /// </summary>
         GamePage = 0,
         /// <summary>
-        /// Page for the Capitals game
+        /// Page for the difficulty settings
         /// </summary>
         DifficultyPage = 1,
+        /// <summary>
+        /// Page for the capitals game
+        /// </summary>
+        CapitalsGame = 2,
 
     }
 }
