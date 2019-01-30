@@ -101,6 +101,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GeographyQuizDBDataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\GetCountriesHelper.cs" />
+    <Compile Include="Helpers\Shuffler.cs" />
     <Compile Include="Pages\BasePage.cs" />
     <Compile Include="Pages\GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>

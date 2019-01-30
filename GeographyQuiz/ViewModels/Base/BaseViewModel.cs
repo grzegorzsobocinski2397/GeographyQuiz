@@ -1,5 +1,5 @@
 using GalaSoft.MvvmLight;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
@@ -29,7 +29,7 @@ namespace GeographyQuiz
         /// <summary>
         /// Contains all the countries from the local database 
         /// </summary>
-        public ObservableCollection<Country> CountriesList { get; set; }
+        public List<Country> CountriesList { get; set; }
 
         #region Constructor
         /// <summary>
@@ -38,7 +38,7 @@ namespace GeographyQuiz
         public BaseViewModel()
         {
             // Creates new Observable Collection of countries
-            CountriesList = new ObservableCollection<Country>();
+            CountriesList = new List<Country>();
 
             // Create new datatable 
             DataTable CountriesTable = new DataTable();
