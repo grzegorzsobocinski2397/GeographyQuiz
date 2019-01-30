@@ -9,47 +9,40 @@ namespace GeographyQuiz
     public class CapitalsListViewModel : BaseViewModel
     {
         #region Private Members
+
+
         /// <summary>
-        /// Shuffles the arrays
+        /// Shuffles the arrays.
         /// </summary>
-        public Shuffler Shuffler { get; set; }
+        private Shuffler Shuffler = new Shuffler();
+        /// <summary>
+        /// Get the countries based on the difficulty level.
+        /// </summary>
+        private GetCountriesHelper GetCountriesHelper = new GetCountriesHelper();
         #endregion
         #region Public Properties
-
+        /// <summary>
+        /// Number of questions left, it is equivalent to the difficulty level.
+        /// </summary>
+        public int NumberOfQuestionsLeft { get; set; }
         /// <summary>
         /// Informs the user of his current score and how many questions he has yet to answer
         /// </summary>
         public string ScoreInformation { get; set; }
         /// <summary>
-        /// Number of questions answered correctly
+        /// Number of questions answered correctly.
         /// </summary>
         public int NumberOfCorrectAnswers { get; set; }
         /// <summary>
-        /// Correct answer for the current question
+        /// Correct answer for the current question.
         /// </summary>
         public Country CorrectAnswer { get; set; }
-        /// <summary>
-        /// First answer, but it doesn't need to be a first button
-        /// </summary>
-        public string FirstAnswer { get; set; }
-        /// <summary>
-        /// Second answer, but it doesn't need to be a first button
-        /// </summary>
-        public string SecondAnswer { get; set; }
-        /// <summary>
-        /// Third answer, but it doesn't need to be a first button
-        /// </summary>
-        public string ThirdAnswer { get; set; }
-        /// <summary>
-        /// Fourth answer, but it doesn't need to be a first button
-        /// </summary>
-        public string FourthAnswer { get; set; }
-        /// <summary>
-        /// Number of questions left, it is equivalent to the difficulty level 
-        /// </summary>
-        public int NumberOfQuestionsLeft { get; set; }
-
-        public GetCountriesHelper GetCountriesHelper { get; set; }
+        public List<Button> ListOfButtons { get; set; }
+        public Button FirstButton { get; set; }
+        public Button SecondButton { get; set; }
+        public Button ThirdButton { get; set; }
+        public Button FourthButton { get; set; }
+        public bool IsBreakOn { get; set; }
         /// <summary>
         /// Contains countries chosen by random on the difficulty level specified before
         /// </summary>
@@ -65,9 +58,13 @@ namespace GeographyQuiz
         #endregion
         #region Commands
         /// <summary>
-        /// User's choice in the game
+        /// User's choice in the game.
         /// </summary>
         public ICommand AnswerCommand { get; set; }
+        /// <summary>
+        /// User clicked the window and wants to proceed.
+        /// </summary>
+        public ICommand BreakOverCommand { get; set; }
         #endregion
         #region Constructor
         /// <summary>
@@ -81,23 +78,55 @@ namespace GeographyQuiz
 
             // Creates commands 
             AnswerCommand = new RelayParameterCommand((parameter) => CheckTheAnswer(parameter));
+            BreakOverCommand = new RelayCommand(() => NextQuestion());
+            
+            // Creates new buttons 
+            FirstButton = new Button();
+            SecondButton = new Button();
+            ThirdButton = new Button();
+            FourthButton = new Button();
 
-            Shuffler = new Shuffler();
-            GetCountriesHelper = new GetCountriesHelper();
+            // Insert these buttons into a list so it's easier to reset them
+            ListOfButtons = new List<Button>()
+            {
+                FirstButton,
+                SecondButton,
+                ThirdButton,
+                FourthButton
+            };
 
             // Registers the message 
             MessengerInstance.Register<NotificationMessage<int>>(this, StartGame);
-
-
         }
         #endregion
         #region Private Methods
         private void CheckTheAnswer(object parameter)
         {
             // Casts the parameter as a string
-            string answer = (string)parameter;
+            Button answer = (Button)parameter;
+
+            // Color the buttons according to answers 
+            foreach(var button in ListOfButtons)
+            {
+                IsBreakOn = true;
+
+                // Users choice 
+                if (button.Content == answer.Content)
+                    button.IsSelected = true;
+
+                // Sets the color of buttons
+                if (button.IsSelected == true && button.Content == CorrectAnswer.Name)
+                    button.BackgroundColor = "Green";
+                else if (button.IsSelected == true && button.Content != CorrectAnswer.Name)
+                    button.BackgroundColor = "Red";
+                else if(button.Content == CorrectAnswer.Name)
+                    button.BackgroundColor = "Green";
+                else
+                    button.BackgroundColor = "Blue";
+            }
+
             // If the user's answer matcher the correct answer then he gets a point
-            if (answer == CorrectAnswer.Name)
+            if (answer.Content == CorrectAnswer.Name)
             {
                 // Decrease number of questions by 1
                 NumberOfQuestionsLeft--;
@@ -105,8 +134,6 @@ namespace GeographyQuiz
                 NumberOfCorrectAnswers++;
                 // Clear current questions collection
                 CurrentQuestions.Clear();
-                // Start a new question
-                NextQuestion();
             }
             else
             {
@@ -114,8 +141,6 @@ namespace GeographyQuiz
                 NumberOfQuestionsLeft--;
                 // Clear current questions collection
                 CurrentQuestions.Clear();
-                // Starts a new question
-                NextQuestion();
             }
         }
 
@@ -133,7 +158,6 @@ namespace GeographyQuiz
                 // Begins with the first question
                 NextQuestion();
             }
-
         }
 
         /// <summary>
@@ -141,20 +165,23 @@ namespace GeographyQuiz
         /// </summary>
         private void NextQuestion()
         {
+            // Break is over and buttons are now usable
+            IsBreakOn = false;
+
             // Informs the user of his current score 
             ScoreInformation = string.Format("{0} questions left, you answered {1} correctly", NumberOfQuestionsLeft, NumberOfCorrectAnswers);
 
             // Random numbers 
             int[] ChosenNumbers = Shuffler.Shuffle(NumberOfQuestionsLeft);
-            
+
             // Adds 4 countries to the current question 
             for (int i = 0; i < 4; i++)
             {
                 CurrentQuestions.Add(CountriesForTheGame.ElementAt(ChosenNumbers[i]));
-
             }
 
             int[] Questions = Shuffler.Shuffle(4);
+
             // Correct answer is also random
             CorrectAnswer = CurrentQuestions.ElementAt(Questions[Shuffler.RandomNumber.Next(0, 3)]);
 
@@ -164,17 +191,23 @@ namespace GeographyQuiz
             // Formats the question string 
             Question = string.Format("{0} jest stolicą, którego kraju?", CorrectAnswer.Capital);
 
-            // Answers are placed randomly 
-            FirstAnswer = CurrentQuestions.ElementAt(Questions[0]).Name;
-            SecondAnswer = CurrentQuestions.ElementAt(Questions[1]).Name;
-            ThirdAnswer = CurrentQuestions.ElementAt(Questions[2]).Name;
-            FourthAnswer = CurrentQuestions.ElementAt(Questions[3]).Name;
+            // Changes the button content and selects the true answer
+            for (int j = 0; j < 4; j++)
+            {
+                // Resets the values for buttons
+                ListOfButtons[j].IsCorrect = false;
+                ListOfButtons[j].IsSelected = false;
+                ListOfButtons[j].BackgroundColor = "Blue";
 
+                // Changes the button content
+                ListOfButtons[j].Content = CurrentQuestions.ElementAt(Questions[j]).Name;
 
+                // Selects button with correct answer
+                if (ListOfButtons[j].Content == CorrectAnswer.Name)
+                    ListOfButtons[j].IsCorrect = true;
+            }
+            
         }
-
-
-
         #endregion
     }
 }

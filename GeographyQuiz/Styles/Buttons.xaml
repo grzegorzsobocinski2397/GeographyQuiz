@@ -50,7 +50,6 @@
 
     <!--  Base Button  -->
     <Style x:Key="BaseButton" TargetType="{x:Type Button}">
-        <Setter Property="Background" Value="White" />
         <Setter Property="Foreground" Value="{StaticResource ButtonForegroundBrush}" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
@@ -59,6 +58,7 @@
         <Setter Property="Padding" Value="1" />
         <Setter Property="Height" Value="100" />
         <Setter Property="Width" Value="170" />
+        <Setter Property="Background" Value="White"/>
 
         <Setter Property="Template">
             <Setter.Value>
@@ -102,9 +102,12 @@
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
+
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
+            
         </Setter>
+      
     </Style>
 </ResourceDictionary>

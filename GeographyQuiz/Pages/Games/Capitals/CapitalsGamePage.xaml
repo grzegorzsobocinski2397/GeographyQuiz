@@ -10,6 +10,7 @@
     x:TypeArguments="local:CapitalsListViewModel"
     mc:Ignorable="d">
 
+    <!--  Content  -->
     <Grid Margin="0,10,0,10">
 
         <Grid.RowDefinitions>
@@ -20,6 +21,7 @@
             <!--  Number of questions left and number of questions answered correctly  -->
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+
 
         <!--  Question title  -->
         <TextBlock
@@ -45,41 +47,50 @@
                 <!--  Fourth answer  -->
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
+
             <!--  First answer  -->
             <Button
                 Grid.Row="0"
                 Grid.Column="0"
+                Background="{Binding FirstButton.BackgroundColor, Converter={local:StringToBackgroundColorConverter}}"
                 Command="{Binding AnswerCommand}"
-                CommandParameter="{Binding FirstAnswer}"
-                Content="{Binding FirstAnswer}"
+                CommandParameter="{Binding FirstButton}"
+                Content="{Binding FirstButton.Content}"
                 Style="{DynamicResource BaseButton}" />
+
             <!--  Second question  -->
             <Button
                 Grid.Row="2"
                 Grid.Column="0"
+                Background="{Binding SecondButton.BackgroundColor, Converter={local:StringToBackgroundColorConverter}}"
                 Command="{Binding AnswerCommand}"
-                CommandParameter="{Binding SecondAnswer}"
-                Content="{Binding SecondAnswer}"
+                CommandParameter="{Binding SecondButton}"
+                Content="{Binding SecondButton.Content}"
                 Style="{DynamicResource BaseButton}" />
+
             <!--  Third question  -->
             <Button
                 Grid.Row="0"
                 Grid.Column="1"
+                Background="{Binding ThirdButton.BackgroundColor, Converter={local:StringToBackgroundColorConverter}}"
                 Command="{Binding AnswerCommand}"
-                CommandParameter="{Binding ThirdAnswer}"
-                Content="{Binding ThirdAnswer}"
+                CommandParameter="{Binding ThirdButton}"
+                Content="{Binding ThirdButton.Content}"
                 Style="{DynamicResource BaseButton}" />
+
             <!--  Fourth question  -->
             <Button
                 Grid.Row="1"
                 Grid.Column="1"
+                Background="{Binding FourthButton.BackgroundColor, Converter={local:StringToBackgroundColorConverter}}"
                 Command="{Binding AnswerCommand}"
-                CommandParameter="{Binding FourthAnswer}"
-                Content="{Binding FourthAnswer}"
+                CommandParameter="{Binding FourthButton}"
+                Content="{Binding FourthButton.Content}"
                 Style="{DynamicResource BaseButton}" />
 
 
         </Grid>
+        <!--  User score and questions left  -->
         <TextBlock
             Grid.Row="2"
             Margin="0,0,0,10"
@@ -88,5 +99,24 @@
             Text="{Binding ScoreInformation}"
             TextAlignment="Center"
             TextWrapping="WrapWithOverflow" />
+
+
+        <!--  Invisible border that needs to be clicked if user wants to proceed to next question  -->
+        <Border
+            Grid.RowSpan="3"
+            Margin="0,-10,0,-10"
+            Background="Transparent"
+            Visibility="{Binding IsBreakOn, Converter={local:BooleanToVisibilityConverter}}">
+            <Border.InputBindings>
+                <MouseBinding Command="{Binding BreakOverCommand}" MouseAction="LeftClick" />
+            </Border.InputBindings>
+            <TextBlock
+                Margin="0,10,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Foreground="DarkBlue"
+                Text="Click anywhere to continue!" />
+        </Border>
     </Grid>
+
 </local:BasePage>

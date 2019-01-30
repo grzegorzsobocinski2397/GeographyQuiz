@@ -42,6 +42,7 @@
                 Grid.Column="0"
                 Width="200"
                 Height="100"
+                Background="White"
                 Command="{Binding CapitalsCommand}"
                 Content="Stolice"
                 Style="{DynamicResource BaseButton}" />
@@ -50,6 +51,7 @@
                 Grid.Column="2"
                 Width="200"
                 Height="100"
+                Background="White"
                 Command="{Binding FlagsCommand}"
                 Content="Flagi"
                 Style="{DynamicResource BaseButton}" />
