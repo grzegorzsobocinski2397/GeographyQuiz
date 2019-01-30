@@ -97,6 +97,7 @@
     <Compile Include="DataModels\ApplicationPage.cs" />
     <Compile Include="DataModels\Button.cs" />
     <Compile Include="DataModels\Country.cs" />
+    <Compile Include="DataModels\SummaryString.cs" />
     <Compile Include="GeographyQuizDBDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -114,6 +115,9 @@
     <Compile Include="Pages\Games\DifficultyPage.xaml.cs">
       <DependentUpon>DifficultyPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Games\SummaryPage.xaml.cs">
+      <DependentUpon>SummaryPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ValueConverters\ApplicationPageValueConverter.cs" />
     <Compile Include="ValueConverters\BaseValueConverter.cs" />
     <Compile Include="ValueConverters\BooleanToVisibilityConverter.cs" />
@@ -125,6 +129,7 @@
     <Compile Include="ViewModels\ChooseGameViewModel.cs" />
     <Compile Include="ViewModels\Games\CapitalsGame\Capitals\CapitalsListViewModel.cs" />
     <Compile Include="ViewModels\Games\CapitalsGame\DifficultyViewModel.cs" />
+    <Compile Include="ViewModels\Games\SummaryViewModel.cs" />
     <Compile Include="ViewModels\WindowViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -149,6 +154,10 @@
     <Page Include="Pages\Games\DifficultyPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\Games\SummaryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\Buttons.xaml">
       <SubType>Designer</SubType>

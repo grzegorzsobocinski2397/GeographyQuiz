@@ -9,8 +9,6 @@ namespace GeographyQuiz
     public class CapitalsListViewModel : BaseViewModel
     {
         #region Private Members
-
-
         /// <summary>
         /// Shuffles the arrays.
         /// </summary>
@@ -19,6 +17,10 @@ namespace GeographyQuiz
         /// Get the countries based on the difficulty level.
         /// </summary>
         private GetCountriesHelper GetCountriesHelper = new GetCountriesHelper();
+        /// <summary>
+        /// Contains all the answers 
+        /// </summary>
+        private List<Country> summaryList = new List<Country>();
         #endregion
         #region Public Properties
         /// <summary>
@@ -134,6 +136,8 @@ namespace GeographyQuiz
                 NumberOfCorrectAnswers++;
                 // Clear current questions collection
                 CurrentQuestions.Clear();
+                // Adds the used country into summary, true because user was rigth
+                summaryList.Add(AddToSummary(answer.Content, true));
             }
             else
             {
@@ -141,9 +145,24 @@ namespace GeographyQuiz
                 NumberOfQuestionsLeft--;
                 // Clear current questions collection
                 CurrentQuestions.Clear();
+                // Adds the used country into summary, false because user was wrong 
+                summaryList.Add(AddToSummary(answer.Content, false));
+
             }
         }
-
+        /// <summary>
+        /// Adds the country to the summary
+        /// </summary>
+        /// <param name="countryName">Country name to be added</param>
+        /// <returns></returns>
+        private Country AddToSummary(string countryName, bool wasUserRight)
+        {
+            // Looks up for the country in the database
+            Country country = CountriesList.Where(c => c.Name == countryName).FirstOrDefault();
+            // Changes the value based on the parameter
+            country.WasUserRight = wasUserRight;
+            return country;
+        }
         private void StartGame(NotificationMessage<int> message)
         {
             // Continue if the message notification matches
@@ -165,46 +184,57 @@ namespace GeographyQuiz
         /// </summary>
         private void NextQuestion()
         {
-            // Break is over and buttons are now usable
-            IsBreakOn = false;
-
-            // Informs the user of his current score 
-            ScoreInformation = string.Format("{0} questions left, you answered {1} correctly", NumberOfQuestionsLeft, NumberOfCorrectAnswers);
-
-            // Random numbers 
-            int[] ChosenNumbers = Shuffler.Shuffle(NumberOfQuestionsLeft);
-
-            // Adds 4 countries to the current question 
-            for (int i = 0; i < 4; i++)
+            if(NumberOfQuestionsLeft > 0)
             {
-                CurrentQuestions.Add(CountriesForTheGame.ElementAt(ChosenNumbers[i]));
+                // Break is over and buttons are now usable
+                IsBreakOn = false;
+
+                // Informs the user of his current score 
+                ScoreInformation = string.Format("{0} questions left, you answered {1} correctly", NumberOfQuestionsLeft, NumberOfCorrectAnswers);
+
+                // Random numbers 
+                int[] ChosenNumbers = Shuffler.Shuffle(NumberOfQuestionsLeft+10);
+
+                // Adds 4 countries to the current question 
+                for (int i = 0; i < 4; i++)
+                {
+                    CurrentQuestions.Add(CountriesForTheGame.ElementAt(ChosenNumbers[i]));
+                }
+
+                int[] Questions = Shuffler.Shuffle(4);
+
+                // Correct answer is also random
+                CorrectAnswer = CurrentQuestions.ElementAt(Questions[Shuffler.RandomNumber.Next(0, 3)]);
+
+                // Removes the answer from the current questions so it won't appear again
+                CountriesForTheGame.Remove(CorrectAnswer);
+
+                // Formats the question string 
+                Question = string.Format("{0} jest stolicą, którego kraju?", CorrectAnswer.Capital);
+
+                // Changes the button content and selects the true answer
+                for (int j = 0; j < 4; j++)
+                {
+                    // Resets the values for buttons
+                    ListOfButtons[j].IsCorrect = false;
+                    ListOfButtons[j].IsSelected = false;
+                    ListOfButtons[j].BackgroundColor = "Blue";
+
+                    // Changes the button content
+                    ListOfButtons[j].Content = CurrentQuestions.ElementAt(Questions[j]).Name;
+
+                    // Selects button with correct answer
+                    if (ListOfButtons[j].Content == CorrectAnswer.Name)
+                        ListOfButtons[j].IsCorrect = true;
+                }
             }
-
-            int[] Questions = Shuffler.Shuffle(4);
-
-            // Correct answer is also random
-            CorrectAnswer = CurrentQuestions.ElementAt(Questions[Shuffler.RandomNumber.Next(0, 3)]);
-
-            // Removes the answer from the current questions so it won't appear again
-            CountriesForTheGame.Remove(CorrectAnswer);
-
-            // Formats the question string 
-            Question = string.Format("{0} jest stolicą, którego kraju?", CorrectAnswer.Capital);
-
-            // Changes the button content and selects the true answer
-            for (int j = 0; j < 4; j++)
+            else
             {
-                // Resets the values for buttons
-                ListOfButtons[j].IsCorrect = false;
-                ListOfButtons[j].IsSelected = false;
-                ListOfButtons[j].BackgroundColor = "Blue";
-
-                // Changes the button content
-                ListOfButtons[j].Content = CurrentQuestions.ElementAt(Questions[j]).Name;
-
-                // Selects button with correct answer
-                if (ListOfButtons[j].Content == CorrectAnswer.Name)
-                    ListOfButtons[j].IsCorrect = true;
+                // Changes the page to summary
+                ChangePage(ApplicationPage.SummaryPage);
+                // Sends the message to the SummaryViewModel
+                MessengerInstance.Send(new NotificationMessage<List<Country>>(summaryList, "Summary"));
+                
             }
             
         }

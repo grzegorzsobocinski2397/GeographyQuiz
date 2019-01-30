@@ -58,7 +58,7 @@ namespace GeographyQuiz
                 difficultyLevel = 1;
 
             // Shuffles the array 
-            int[] ChosenNumbers = Shuffler.Shuffle(numberOfElements);
+            int[] ChosenNumbers = Shuffler.Shuffle(numberOfElements+10);
 
             // Adds every country based on the difficulty level
             foreach (Country country in countriesList)
@@ -68,7 +68,7 @@ namespace GeographyQuiz
             }
 
             // Adds specified amount of countries to the game
-            for (int i = 0; i < numberOfElements; i++)
+            for (int i = 0; i < numberOfElements+10; i++)
             {
                 CountriesForTheGame.Add(CountriesBasedOnDifficulty.ElementAt(ChosenNumbers[i]));
             }

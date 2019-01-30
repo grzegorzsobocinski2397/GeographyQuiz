@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GeographyQuiz
+﻿namespace GeographyQuiz
 {
+    /// <summary>
+    /// Basic class for the countries
+    /// </summary>
     public class Country
     {
         private int id;
@@ -42,6 +39,16 @@ namespace GeographyQuiz
         {
             get { return difficultyLevel; }
             set { difficultyLevel = value; }
+        }
+        /// <summary>
+        /// True if the user answered right
+        /// </summary>
+        private bool wasUserRight;
+
+        public bool WasUserRight
+        {
+            get { return wasUserRight; }
+            set { wasUserRight = value; }
         }
 
         public Country()

@@ -19,7 +19,11 @@ namespace GeographyQuiz
         /// <summary>
         /// Page for the capitals game
         /// </summary>
-        CapitalsGame = 2,
+        CapitalsGamePage = 2,
+        /// <summary>
+        /// Page for the summary of user's choices
+        /// </summary>
+        SummaryPage = 3,
 
     }
 }

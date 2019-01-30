@@ -40,7 +40,7 @@ namespace GeographyQuiz
             // Changes the difficulty level
             DifficultyLevel = int.Parse(parameter as string);
 
-            ChangePage(ApplicationPage.CapitalsGame);
+            ChangePage(ApplicationPage.CapitalsGamePage);
 
             // Sends the difficulty level inside MVVM Light notification message to the CapitalsViewModel
             MessengerInstance.Send(new NotificationMessage<int>(DifficultyLevel, "DifficultyChosen"));

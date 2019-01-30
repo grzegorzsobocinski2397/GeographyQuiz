@@ -21,8 +21,10 @@ namespace GeographyQuiz
                     return new GamePage();
                 case ApplicationPage.DifficultyPage:
                     return new DifficultyPage();
-                case ApplicationPage.CapitalsGame:
+                case ApplicationPage.CapitalsGamePage:
                     return new CapitalsGamePage();
+                case ApplicationPage.SummaryPage:
+                    return new SummaryPage();
                 default:
                     Debugger.Break();
                     return null;
