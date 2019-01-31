@@ -8,29 +8,22 @@ using System.Windows;
 namespace GeographyQuiz
 {
     /// <summary>
-    /// This class contains properties that the main View can data bind to.
-    /// <para>
-    /// Use the <strong>mvvminpc</strong> snippet to add bindable properties to this ViewModel.
-    /// </para>
-    /// <para>
-    /// You can also use Blend to data bind with the tool's support.
-    /// </para>
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
+    /// Base View Model for all the view models that use NotifyPropertyChanged and MVVM Light communication.
     /// </summary>
     public class BaseViewModel : ViewModelBase, INotifyPropertyChanged
     {
+        #region Private Members
         /// <summary>
         /// Connection string to the local database
         /// </summary>
         private readonly string connectionString = GeographyQuiz.Properties.Settings.Default.GeographyQuizDBConnectionString;
-
+        #endregion
+        #region Public Properties
         /// <summary>
         /// Contains all the countries from the local database 
         /// </summary>
         public List<Country> CountriesList { get; set; }
-
+        #endregion
         #region Constructor
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
@@ -76,12 +69,12 @@ namespace GeographyQuiz
         }
 
         /// <summary>
-        /// Changes the current page ofo the main window 
+        /// Changes the current page of the main window 
         /// </summary>
         /// <param name="page"></param>
         public void ChangePage(ApplicationPage page)
         {
-            ((WindowViewModel)((MainWindow)Application.Current.MainWindow).DataContext).ChangePage(page);
+            ((WindowViewModel)((MainWindow)Application.Current.MainWindow).DataContext).CurrentPage = page;
         }
         #endregion
         #region PropertyChanged

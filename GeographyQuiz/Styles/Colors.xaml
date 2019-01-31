@@ -1,11 +1,8 @@
-﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:GeographyQuiz">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
 
-    <Color x:Key="ButtonBackground">#F0F8FF</Color>
-    <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="{StaticResource ButtonBackground}" />
+    <Color x:Key="ApplicationBackground">#F0F8FF</Color>
+    <SolidColorBrush x:Key="ApplicationBackgroundBrush" Color="{StaticResource ApplicationBackground}" />
 
     <Color x:Key="ButtonBackgroundMouseOver">#D7ECFF</Color>
     <SolidColorBrush x:Key="ButtonBackgroundMouseOverBrush" Color="{StaticResource ButtonBackgroundMouseOver}" />

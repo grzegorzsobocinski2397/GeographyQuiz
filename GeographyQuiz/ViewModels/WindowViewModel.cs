@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
 namespace GeographyQuiz
 {
     public class WindowViewModel : BaseViewModel
     {
-        #region Public Properties
+        #region Private Members
         /// <summary>
         /// The window for this view model
         /// </summary>
@@ -33,7 +28,9 @@ namespace GeographyQuiz
         /// Radius of the edges
         /// </summary>
         public CornerRadius WindowCornerRadius => new CornerRadius(windowCorner);
-
+        /// <summary>
+        /// Current page being displayed in the application.
+        /// </summary>
         public ApplicationPage CurrentPage { get; set; } 
         #endregion
         #region Commands
@@ -41,8 +38,6 @@ namespace GeographyQuiz
         /// Closes the application
         /// </summary>
         public ICommand CloseWindowCommand { get; set; }
-        
-
         #endregion
         #region Constructor
         public WindowViewModel(Window window)
@@ -53,19 +48,8 @@ namespace GeographyQuiz
             // Creates commands
             CloseWindowCommand = new RelayCommand(() => window.Close());
 
-            // Sets the first page as GamePage
-            CurrentPage = ApplicationPage.GamePage;
-        }
-        #endregion
-
-        #region Public Methods
-        /// <summary>
-        /// Changes the current page
-        /// </summary>
-        /// <param name="page"></param>
-        public void ChangePage(ApplicationPage page)
-        {
-            CurrentPage = page;
+            // Sets the first page as ChooseGamePage
+            CurrentPage = ApplicationPage.ChooseGamePage;
         }
         #endregion
     }

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Markup;
 
@@ -25,7 +21,6 @@ namespace GeographyQuiz
 
         private static T converter = null;
         #endregion
-
         #region Public Properties
         /// <summary>
         /// Provides a static instance of the value converter

@@ -1,24 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace GeographyQuiz
 {
     /// <summary>
-    /// A base page for all the pages
+    /// A base page for all the pages. Must have ViewModel which can be new() and is a child of <see cref="BaseViewModel"/>
     /// </summary>
     /// <typeparam name="VM"></typeparam>
     public class BasePage<VM> : Page
         where VM : BaseViewModel, new()
     {
         #region Private Members
+        /// <summary>
+        /// Page view model
+        /// </summary>
         private VM viewModel;
         #endregion
-
         #region Public Properties
+        /// <summary>
+        /// Page view model
+        /// </summary>
         public VM ViewModel
         {
             get { return viewModel; }
@@ -37,6 +37,9 @@ namespace GeographyQuiz
 
         #endregion
         #region Constructor
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public BasePage()
         {
             ViewModel = new VM();

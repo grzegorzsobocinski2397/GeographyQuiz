@@ -1,28 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
 
 namespace GeographyQuiz
 {
+    /// <summary>
+    /// Converts <see cref="ApplicationPage"/> into a Page
+    /// </summary>
     public class ApplicationPageValueConverter : BaseValueConverter<ApplicationPageValueConverter>
     {
-      
-
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             switch ((ApplicationPage)value)
             {
-                case ApplicationPage.GamePage:
-                    return new GamePage();
+                case ApplicationPage.ChooseGamePage:
+                    return new ChooseGamePage();
                 case ApplicationPage.DifficultyPage:
                     return new DifficultyPage();
-                case ApplicationPage.CapitalsGamePage:
-                    return new CapitalsGamePage();
+                case ApplicationPage.GamePage:
+                    return new GamePage();
                 case ApplicationPage.SummaryPage:
                     return new SummaryPage();
                 default:

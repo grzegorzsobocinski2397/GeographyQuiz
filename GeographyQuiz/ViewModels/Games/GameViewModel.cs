@@ -1,18 +1,21 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
 namespace GeographyQuiz
 {
-    public class CapitalsListViewModel : BaseViewModel
+    public class GameViewModel : BaseViewModel
     {
         #region Private Members
         /// <summary>
-        /// Shuffles the arrays.
+        /// Next question helper class
         /// </summary>
-        private Shuffler Shuffler = new Shuffler();
+        private NextQuestionHelper nextQuestion = new NextQuestionHelper();
+        /// <summary>
+        /// Current game mode.
+        /// </summary>
+        private string gameMode = string.Empty;
         /// <summary>
         /// Get the countries based on the difficulty level.
         /// </summary>
@@ -20,7 +23,7 @@ namespace GeographyQuiz
         /// <summary>
         /// Contains all the answers 
         /// </summary>
-        private List<Country> summaryList = new List<Country>();
+        private List<CountryAnswer> summaryList = new List<CountryAnswer>();
         #endregion
         #region Public Properties
         /// <summary>
@@ -38,25 +41,24 @@ namespace GeographyQuiz
         /// <summary>
         /// Correct answer for the current question.
         /// </summary>
-        public Country CorrectAnswer { get; set; }
+        public string CorrectAnswer { get; set; }
         public List<Button> ListOfButtons { get; set; }
         public Button FirstButton { get; set; }
         public Button SecondButton { get; set; }
         public Button ThirdButton { get; set; }
         public Button FourthButton { get; set; }
+        /// <summary>
+        /// True if user answered a question.
+        /// </summary>
         public bool IsBreakOn { get; set; }
         /// <summary>
-        /// Contains countries chosen by random on the difficulty level specified before
+        /// Contains countries chosen by random on the difficulty level specified before.
         /// </summary>
         public List<Country> CountriesForTheGame { get; set; }
         /// <summary>
-        /// Question for the user
+        /// Question for the user.
         /// </summary>
         public string Question { get; set; }
-        /// <summary>
-        /// 4 random countries from the <see cref="CountriesForTheGame"/>
-        /// </summary>
-        public ObservableCollection<Country> CurrentQuestions { get; set; }
         #endregion
         #region Commands
         /// <summary>
@@ -70,18 +72,17 @@ namespace GeographyQuiz
         #endregion
         #region Constructor
         /// <summary>
-        /// Default contructor
+        /// Default contructor.
         /// </summary>
-        public CapitalsListViewModel()
+        public GameViewModel()
         {
             // Creates Lists and Observable Collections
             CountriesForTheGame = new List<Country>();
-            CurrentQuestions = new ObservableCollection<Country>();
 
             // Creates commands 
             AnswerCommand = new RelayParameterCommand((parameter) => CheckTheAnswer(parameter));
             BreakOverCommand = new RelayCommand(() => NextQuestion());
-            
+
             // Creates new buttons 
             FirstButton = new Button();
             SecondButton = new Button();
@@ -98,7 +99,7 @@ namespace GeographyQuiz
             };
 
             // Registers the message 
-            MessengerInstance.Register<NotificationMessage<int>>(this, StartGame);
+            MessengerInstance.Register<NotificationMessage<string[]>>(this, StartGame);
         }
         #endregion
         #region Private Methods
@@ -108,7 +109,7 @@ namespace GeographyQuiz
             Button answer = (Button)parameter;
 
             // Color the buttons according to answers 
-            foreach(var button in ListOfButtons)
+            foreach (var button in ListOfButtons)
             {
                 IsBreakOn = true;
 
@@ -117,37 +118,32 @@ namespace GeographyQuiz
                     button.IsSelected = true;
 
                 // Sets the color of buttons
-                if (button.IsSelected == true && button.Content == CorrectAnswer.Name)
+                if (button.IsSelected == true && button.Content == CorrectAnswer)
                     button.BackgroundColor = "Green";
-                else if (button.IsSelected == true && button.Content != CorrectAnswer.Name)
+                else if (button.IsSelected == true && button.Content != CorrectAnswer)
                     button.BackgroundColor = "Red";
-                else if(button.Content == CorrectAnswer.Name)
+                else if (button.Content == CorrectAnswer)
                     button.BackgroundColor = "Green";
                 else
                     button.BackgroundColor = "Blue";
             }
 
             // If the user's answer matcher the correct answer then he gets a point
-            if (answer.Content == CorrectAnswer.Name)
+            if (answer.Content == CorrectAnswer)
             {
                 // Decrease number of questions by 1
                 NumberOfQuestionsLeft--;
                 // Increase user score by one
                 NumberOfCorrectAnswers++;
-                // Clear current questions collection
-                CurrentQuestions.Clear();
-                // Adds the used country into summary, true because user was rigth
+                // Adds the used country into summary, true because user was right
                 summaryList.Add(AddToSummary(answer.Content, true));
             }
             else
             {
                 // Decrease number of questions by 1
                 NumberOfQuestionsLeft--;
-                // Clear current questions collection
-                CurrentQuestions.Clear();
                 // Adds the used country into summary, false because user was wrong 
                 summaryList.Add(AddToSummary(answer.Content, false));
-
             }
         }
         /// <summary>
@@ -155,24 +151,55 @@ namespace GeographyQuiz
         /// </summary>
         /// <param name="countryName">Country name to be added</param>
         /// <returns></returns>
-        private Country AddToSummary(string countryName, bool wasUserRight)
+        private CountryAnswer AddToSummary(string answer, bool wasUserRight)
         {
             // Looks up for the country in the database
-            Country country = CountriesList.Where(c => c.Name == countryName).FirstOrDefault();
-            // Changes the value based on the parameter
-            country.WasUserRight = wasUserRight;
-            return country;
+            Country country = new Country();
+
+            // Creates new country answer and adds that to the summary list  
+            if (gameMode == "Capitals")
+            {
+                country = CountriesList.Where(c => c.Name == CorrectAnswer).FirstOrDefault();
+                CountryAnswer countryAnswer = new CountryAnswer()
+                {
+                    Capital = country.Capital,
+                    Name = answer,
+                    WasUserRight = wasUserRight,
+                    GameMode = gameMode
+
+                };
+                return countryAnswer;
+
+            }
+            else
+            {
+                country = CountriesList.Where(c => c.Capital == CorrectAnswer).FirstOrDefault();
+                CountryAnswer countryAnswer = new CountryAnswer()
+                {
+                    Capital = answer,
+                    Name = country.Name,
+                    WasUserRight = wasUserRight,
+                    GameMode = gameMode
+                };
+
+                return countryAnswer;
+            }
+
+
         }
-        private void StartGame(NotificationMessage<int> message)
+        private void StartGame(NotificationMessage<string[]> message)
         {
             // Continue if the message notification matches
             if (message.Notification == "DifficultyChosen")
             {
                 // Number of questions is equivalent to the difficulty level
-                NumberOfQuestionsLeft = message.Content;
+                NumberOfQuestionsLeft = int.Parse(message.Content[1]);
 
-                // Gets the countries based on the difficulty level
-                CountriesForTheGame = GetCountriesHelper.GetCountries(message.Content, CountriesList);
+                // Sets the current game mode
+                gameMode = message.Content[0];
+
+                // Gets the countries based on the difficulty level and game mode
+                CountriesForTheGame = GetCountriesHelper.GetCountries(NumberOfQuestionsLeft, CountriesList);
 
                 // Begins with the first question
                 NextQuestion();
@@ -184,7 +211,7 @@ namespace GeographyQuiz
         /// </summary>
         private void NextQuestion()
         {
-            if(NumberOfQuestionsLeft > 0)
+            if (NumberOfQuestionsLeft > 0)
             {
                 // Break is over and buttons are now usable
                 IsBreakOn = false;
@@ -192,51 +219,37 @@ namespace GeographyQuiz
                 // Informs the user of his current score 
                 ScoreInformation = string.Format("{0} questions left, you answered {1} correctly", NumberOfQuestionsLeft, NumberOfCorrectAnswers);
 
-                // Random numbers 
-                int[] ChosenNumbers = Shuffler.Shuffle(NumberOfQuestionsLeft+10);
+                // Gets the buttons with content from helper class
+                var buttonsList = nextQuestion.NextQuestion(CountriesForTheGame, gameMode, NumberOfQuestionsLeft);
 
-                // Adds 4 countries to the current question 
+                // Assign content of buttons
                 for (int i = 0; i < 4; i++)
                 {
-                    CurrentQuestions.Add(CountriesForTheGame.ElementAt(ChosenNumbers[i]));
+                    ListOfButtons[i].BackgroundColor = buttonsList[i].BackgroundColor;
+                    ListOfButtons[i].Content = buttonsList[i].Content;
+                    ListOfButtons[i].IsCorrect = buttonsList[i].IsCorrect;
+                    ListOfButtons[i].IsSelected = buttonsList[i].IsSelected;
+
+                    if (ListOfButtons[i].IsCorrect == true)
+                        CorrectAnswer = ListOfButtons[i].Content;
                 }
 
-                int[] Questions = Shuffler.Shuffle(4);
+                // Sets the correct answer based on the gamemode
+                if (gameMode == "Capitals")
+                    CountriesForTheGame.Remove(CountriesForTheGame.Where(c => c.Name == CorrectAnswer).FirstOrDefault());
+                else if (gameMode == "Countries")
+                    CountriesForTheGame.Remove(CountriesForTheGame.Where(c => c.Capital == CorrectAnswer).FirstOrDefault());
 
-                // Correct answer is also random
-                CorrectAnswer = CurrentQuestions.ElementAt(Questions[Shuffler.RandomNumber.Next(0, 3)]);
-
-                // Removes the answer from the current questions so it won't appear again
-                CountriesForTheGame.Remove(CorrectAnswer);
-
-                // Formats the question string 
-                Question = string.Format("{0} jest stolicą, którego kraju?", CorrectAnswer.Capital);
-
-                // Changes the button content and selects the true answer
-                for (int j = 0; j < 4; j++)
-                {
-                    // Resets the values for buttons
-                    ListOfButtons[j].IsCorrect = false;
-                    ListOfButtons[j].IsSelected = false;
-                    ListOfButtons[j].BackgroundColor = "Blue";
-
-                    // Changes the button content
-                    ListOfButtons[j].Content = CurrentQuestions.ElementAt(Questions[j]).Name;
-
-                    // Selects button with correct answer
-                    if (ListOfButtons[j].Content == CorrectAnswer.Name)
-                        ListOfButtons[j].IsCorrect = true;
-                }
+                // Sets the question string based on the gamemode
+                Question = nextQuestion.QuestionString;
             }
             else
             {
                 // Changes the page to summary
                 ChangePage(ApplicationPage.SummaryPage);
                 // Sends the message to the SummaryViewModel
-                MessengerInstance.Send(new NotificationMessage<List<Country>>(summaryList, "Summary"));
-                
+                MessengerInstance.Send(new NotificationMessage<List<CountryAnswer>>(summaryList, "Summary"));
             }
-            
         }
         #endregion
     }

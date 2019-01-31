@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace GeographyQuiz
 {
+    /// <summary>
+    /// Value converter that converts bool into a Visibility value.
+    /// </summary>
     public class BooleanToVisibilityConverter : BaseValueConverter<BooleanToVisibilityConverter>
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)

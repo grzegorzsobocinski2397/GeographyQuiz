@@ -32,15 +32,15 @@ namespace GeographyQuiz
         /// </summary>
         public Button()
         {
-            BackgroundColor = "Normal";
+            BackgroundColor = "Blue";
         }
-
+        #endregion
+        #region Property Changed
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
-
     }
 }

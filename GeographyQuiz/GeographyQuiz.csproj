@@ -97,6 +97,7 @@
     <Compile Include="DataModels\ApplicationPage.cs" />
     <Compile Include="DataModels\Button.cs" />
     <Compile Include="DataModels\Country.cs" />
+    <Compile Include="DataModels\CountryAnswer.cs" />
     <Compile Include="DataModels\SummaryString.cs" />
     <Compile Include="GeographyQuizDBDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -106,16 +107,16 @@
     <Compile Include="Helpers\GetCountriesHelper.cs" />
     <Compile Include="Helpers\Shuffler.cs" />
     <Compile Include="Pages\BasePage.cs" />
+    <Compile Include="Pages\ChooseGamePage.xaml.cs">
+      <DependentUpon>ChooseGamePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Games\Capitals\CapitalsGamePage.xaml.cs">
-      <DependentUpon>CapitalsGamePage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Games\DifficultyPage.xaml.cs">
+    <Compile Include="Pages\DifficultyPage.xaml.cs">
       <DependentUpon>DifficultyPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Games\SummaryPage.xaml.cs">
+    <Compile Include="Pages\SummaryPage.xaml.cs">
       <DependentUpon>SummaryPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ValueConverters\ApplicationPageValueConverter.cs" />
@@ -125,10 +126,10 @@
     <Compile Include="ViewModels\Base\BaseViewModel.cs" />
     <Compile Include="ViewModels\Base\RelayParameterCommand.cs" />
     <Compile Include="ViewModels\Base\RelayCommand.cs" />
-    <Compile Include="ViewModels\Base\ViewModelLocator.cs" />
-    <Compile Include="ViewModels\ChooseGameViewModel.cs" />
-    <Compile Include="ViewModels\Games\CapitalsGame\Capitals\CapitalsListViewModel.cs" />
-    <Compile Include="ViewModels\Games\CapitalsGame\DifficultyViewModel.cs" />
+    <Compile Include="ViewModels\Games\ChooseGameViewModel.cs" />
+    <Compile Include="ViewModels\Games\GameViewModel.cs" />
+    <Compile Include="ViewModels\Games\DifficultyViewModel.cs" />
+    <Compile Include="Helpers\NextQuestionHelper.cs" />
     <Compile Include="ViewModels\Games\SummaryViewModel.cs" />
     <Compile Include="ViewModels\WindowViewModel.cs" />
     <Page Include="MainWindow.xaml">
@@ -143,19 +144,19 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\ChooseGamePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\GamePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\Games\Capitals\CapitalsGamePage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\Games\DifficultyPage.xaml">
+    <Page Include="Pages\DifficultyPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\Games\SummaryPage.xaml">
+    <Page Include="Pages\SummaryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -194,7 +195,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Resource Include="Fonts\Lato-Bold.ttf" />
     <Resource Include="Fonts\Lato-Regular.ttf" />
     <Resource Include="Fonts\Lato-Thin.ttf" />
     <None Include="GeographyQuizDBDataSet.xsc">
@@ -239,9 +239,7 @@
     </Content>
     <Resource Include="Resources\Images\Icons\GeographyIcon.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UserControls\Capitals\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.3.3.2\build\Fody.targets" Condition="Exists('..\packages\Fody.3.3.2\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

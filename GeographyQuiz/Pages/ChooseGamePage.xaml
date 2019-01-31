@@ -1,0 +1,47 @@
+﻿<local:BasePage
+    x:Class="GeographyQuiz.ChooseGamePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:GeographyQuiz"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="550"
+    Height="450"
+    x:TypeArguments="local:ChooseGameViewModel">
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <!--  Title  -->
+            <RowDefinition Height="Auto" />
+            <!--  -Choices  -->
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--  Title  -->
+        <TextBlock Style="{StaticResource TitleTextBlock}" Text="W którą grę chcesz zagrać?" />
+
+        <Grid Grid.Row="1" Margin="0,-40,0,0">
+            <Grid.ColumnDefinitions>
+                <!--  Capitals game  -->
+                <ColumnDefinition Width="*" />
+                <!--  Flags game  -->
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <!--  Capitals game  -->
+            <Button
+                Grid.Column="0"
+                Command="{Binding GameChosenCommand}"
+                CommandParameter="Capitals"
+                Content="Stolice"
+                Style="{DynamicResource BaseButton}" />
+            <!--  Flags game  -->
+            <Button
+                Grid.Column="2"
+                Command="{Binding GameChosenCommand}"
+                CommandParameter="Countries"
+                Content="Kraje"
+                Style="{DynamicResource BaseButton}" />
+        </Grid>
+
+    </Grid>
+</local:BasePage>

@@ -16,13 +16,7 @@
                 <ResourceDictionary Source="/Styles/Texts.xaml" />
                 <ResourceDictionary Source="/Styles/Buttons.xaml" />
 
-                <!--  MVVM Light view model locator  -->
-                <ResourceDictionary>
-                    <vm:ViewModelLocator
-                        xmlns:vm="clr-namespace:GeographyQuiz"
-                        x:Key="Locator"
-                        d:IsDataSource="True" />
-                </ResourceDictionary>
+               
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

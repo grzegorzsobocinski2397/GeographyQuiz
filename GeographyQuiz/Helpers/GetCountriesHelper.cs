@@ -11,21 +11,21 @@ namespace GeographyQuiz
     {
         #region Private Members
         /// <summary>
-        /// Shuffles the array 
+        /// Shuffles the array.
         /// </summary>
         private Shuffler Shuffler { get; set; }
         /// <summary>
-        /// Countries based on the difficulty level
+        /// Countries based on the difficulty level.
         /// </summary>
         private List<Country> CountriesBasedOnDifficulty { get; set; }
         /// <summary>
-        /// Countries to return 
+        /// Countries to return.
         /// </summary>
         private List<Country> CountriesForTheGame { get; set; }
         #endregion
         #region Constructor
         /// <summary>
-        /// Default constructor
+        /// Default constructor.
         /// </summary>
         public GetCountriesHelper()
         {
@@ -39,7 +39,7 @@ namespace GeographyQuiz
         #endregion
         #region Public Methods
         /// <summary>
-        /// Returns randomized countries based on the difficulty level
+        /// Returns randomized countries based on the difficulty level.
         /// </summary>
         /// <param name="numberOfElements">How many countries should be returned</param>
         /// <param name="countriesList">Countries to be returned</param>
