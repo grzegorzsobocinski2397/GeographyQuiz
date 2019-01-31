@@ -7,10 +7,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Width="550"
     Height="450"
-    ResizeMode="NoResize"
     MinWidth="550"
     MinHeight="450"
     AllowsTransparency="True"
+    Icon="Resources\Images\Icons\GeographyIcon.png"
+    ResizeMode="NoResize"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">
@@ -61,13 +62,31 @@
                                             <!--  Close button  -->
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
+                                        <!--  Icon  -->
+                                        <Image
+                                            Margin="4"
+                                            Grid.Column="0"
+                                            HorizontalAlignment="Left"
+                                            RenderOptions.BitmapScalingMode="HighQuality"
+                                            SnapsToDevicePixels="True"
+                                            Source="Resources\Images\Icons\GeographyIcon.png" />
 
+                                        <TextBlock
+                                             Grid.Column="1"
+                                            FontSize="{StaticResource FontSizeRegular}"
+                                            VerticalAlignment="Center"
+                                            Foreground="DodgerBlue"
+                                            FontFamily="{StaticResource LatoThin}"
+                                            HorizontalAlignment="Center"
+                                            Text="Geography Quiz"/>
+                                        <!--  Close window button  -->
                                         <Button
                                             Grid.Column="2"
                                             Command="{Binding CloseWindowCommand}"
                                             Content="X"
                                             Style="{StaticResource WindowCloseButton}" />
                                     </Grid>
+                                    <!--  Content  -->
                                     <Border
                                         Grid.Row="1"
                                         Background="{StaticResource ButtonBackgroundBrush}"

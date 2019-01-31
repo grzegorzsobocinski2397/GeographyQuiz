@@ -237,6 +237,7 @@
       <DependentUpon>GeographyQuizDB.mdf</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Images\Icons\GeographyIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="UserControls\Capitals\" />
