@@ -7,8 +7,8 @@
     Width="550"
     Height="420"
     x:TypeArguments="local:SummaryViewModel">
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
-        <Grid Margin="0,10,0,0"> 
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <Grid Margin="0,10,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
 
