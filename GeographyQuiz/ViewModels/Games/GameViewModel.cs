@@ -217,7 +217,7 @@ namespace GeographyQuiz
                 IsBreakOn = false;
 
                 // Informs the user of his current score 
-                ScoreInformation = string.Format("{0} questions left, you answered {1} correctly", NumberOfQuestionsLeft, NumberOfCorrectAnswers);
+                ScoreInformation = string.Format("Pozostało {0} pytań, odpowiedziałeś poprawnie na {1}.", NumberOfQuestionsLeft, NumberOfCorrectAnswers);
 
                 // Gets the buttons with content from helper class
                 var buttonsList = nextQuestion.NextQuestion(CountriesForTheGame, gameMode, NumberOfQuestionsLeft);

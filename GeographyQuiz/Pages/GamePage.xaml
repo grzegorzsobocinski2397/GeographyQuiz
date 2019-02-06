@@ -109,7 +109,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
                 Foreground="DarkBlue"
-                Text="Click anywhere to continue!" />
+                Text="Przyciśnij gdziekolwiek aby kontyunować!" />
         </Border>
     </Grid>
 
