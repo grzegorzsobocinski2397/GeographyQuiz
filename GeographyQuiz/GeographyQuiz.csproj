@@ -111,7 +111,6 @@
     <Compile Include="DataModels\ApplicationPage.cs" />
     <Compile Include="DataModels\Button.cs" />
     <Compile Include="DataModels\Country.cs" />
-    <Compile Include="DataModels\CountryAnswer.cs" />
     <Compile Include="DataModels\Modes\GameMode.cs" />
     <Compile Include="DataModels\SummaryString.cs" />
     <Compile Include="GeographyQuizDBDataSet.Designer.cs">

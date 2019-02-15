@@ -21,8 +21,8 @@
                     <DataTemplate>
                         <TextBlock
                             HorizontalAlignment="Center"
-                            Foreground="{Binding SummaryTextColor}"
-                            Text="{Binding SummaryText}"
+                            Foreground="{Binding ColorBrush}"
+                            Text="{Binding Text}"
                             TextWrapping="WrapWithOverflow" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

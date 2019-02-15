@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 
@@ -6,6 +7,20 @@ namespace GeographyQuiz
 {
     public class SummaryViewModel : BaseViewModel
     {
+        #region Private Members
+        /// <summary>
+        /// Countries used in current game.
+        /// </summary>
+        private static List<Country> gameCountries = new List<Country>();
+        /// <summary>
+        /// Answer for the current question.
+        /// </summary>
+        private string correctAnswer;
+        /// <summary>
+        /// What game mode user played in the current game.
+        /// </summary>
+        private GameMode gameMode;
+        #endregion
         #region Public Properties
         /// <summary>
         /// List of countries to display on the <see cref="SummaryPage"/>.
@@ -27,82 +42,97 @@ namespace GeographyQuiz
             // Creates commands
             ReturnCommand = new RelayCommand(() => ChangePage(ApplicationPage.ChooseGamePage));
             // Registers MVVM light communication
-            MessengerInstance.Register<NotificationMessage<List<CountryAnswer>>>(this, PrepareSummary);
-
+            MessengerInstance.Register<NotificationMessage<List<Tuple<bool, Country, Country>>>>(this, PrepareSummary);
+            MessengerInstance.Register<NotificationMessage<GameMode>>(this, SetGameMode);
             // Initialize collections
             SummaryList = new List<SummaryString>();
         }
         #endregion
         #region Private Methods
         /// <summary>
+        /// Get the game mode from the <see cref="GameViewModel"/>
+        /// </summary>
+        /// <param name="gameModeMessage"></param>
+        private void SetGameMode(NotificationMessage<GameMode> gameModeMessage)
+        {
+            if (gameModeMessage.Notification == "GameModeSummary")
+                gameMode = gameModeMessage.Content;
+        }
+        /// <summary>
         /// Prepares the last page of the game
         /// </summary>
         /// <param name="listOfCountries">List of answers from the quiz</param>
-        private void PrepareSummary(NotificationMessage<List<CountryAnswer>> message)
+        private void PrepareSummary(NotificationMessage<List<Tuple<bool, Country, Country>>> message)
         {
             // Checks if the notification message matches 
             if (message.Notification == "Summary")
             {
-                // Creates summary string from every answer 
-                foreach (var countryAnswer in message.Content)
+                // Adds the answered countries so searching for correct answer is faster than 
+                // looking for the answer in the database
+                foreach (var answer in message.Content)
                 {
-                    if(countryAnswer.GameMode == GameMode.Capitals)
-                    {
-                        if (countryAnswer.WasUserRight == true)
-                        {
-                            // Formats the string 
-                            string summaryText = string.Format("For {0} you answered {1}, which was the correct answer.", countryAnswer.Name, countryAnswer.Capital);
-                            var summaryString = new SummaryString(summaryText, "Green");
-                            SummaryList.Add(summaryString);
-                        }
-                        else if (countryAnswer.WasUserRight == false)
-                        {
-                            string correctAnswer = string.Empty;
+                    gameCountries.Add(answer.Item2);
+                }
 
-                            // Searches for the correct answer in the countries list 
-                            foreach (var country in CountriesList)
-                            {
-                                if (countryAnswer.Name == country.Name)
-                                    correctAnswer = country.Capital;
-                            }
+                // Check answers and style text correctly
+                if (gameMode == GameMode.Capitals)
+                    CapitalsGameModeSummary(message.Content);
+                else 
+                    CountriesGameModeSummary(message.Content);
+            }
+        }
 
-                            // Formats the string 
-                            string summaryText = string.Format("For {0} you answered {1}. Correct answer is {2}.", countryAnswer.Name, countryAnswer.Capital, correctAnswer);
-                            var summaryString = new SummaryString(summaryText, "Red");
-                            SummaryList.Add(summaryString);
-                        }
-                    }
-                    else if (countryAnswer.GameMode == GameMode.Countries)
-                    {
-                        if (countryAnswer.WasUserRight == true)
-                        {
-                            // Formats the string 
-                            string summaryText = string.Format("For {0} you answered {1}, which was the correct answer.", countryAnswer.Name, countryAnswer.Capital);
-                            var summaryString = new SummaryString(summaryText, "Green");
-                            SummaryList.Add(summaryString);
-                        }
-                        else if (countryAnswer.WasUserRight == false)
-                        {
-                            string correctAnswer = string.Empty;
+        private void CapitalsGameModeSummary(List<Tuple<bool, Country, Country>> answers)
+        {
+            
+            // Creates summary string from every answer 
+            foreach (var answer in answers)
+            {
+                if (answer.Item1 == true)
+                {
+                    // Formats the string 
+                    string summaryText = string.Format("For {0} you answered {1}, which was the correct answer.",
+                        answer.Item2.Name, answer.Item2.Capital);
+                    var summaryString = new SummaryString(summaryText, "Green");
+                    SummaryList.Add(summaryString);
+                }
+                else if (answer.Item1 == false)
+                {
+                    // Formats the string 
+                    string summaryText = string.Format("For {0} you answered {1}. Correct answer is {2}.",
+                        answer.Item2.Name, answer.Item3.Capital, answer.Item2.Capital);
+                    var summaryString = new SummaryString(summaryText, "Red");
+                    SummaryList.Add(summaryString);
+                }
+            }
+        }
+        private void CountriesGameModeSummary(List<Tuple<bool, Country, Country>> answers)
+        {
+            // Creates summary string from every answer 
+            foreach (var answer in answers)
+            {
 
-                            // Searches for the correct answer in the countries list 
-                            foreach (var country in CountriesList)
-                            {
-                                if (countryAnswer.Name == country.Name)
-                                    correctAnswer = country.Capital;
-                            }
+                if (answer.Item1 == true)
+                {
+                    // Formats the string 
+                    string summaryText = string.Format("For {0} you answered {1}, which was the correct answer.",
+                        answer.Item2.Name, answer.Item2.Capital);
 
-                            // Formats the string 
-                            string summaryText = string.Format("For {0} you answered {1}. Correct answer is {2}.", countryAnswer.Name, countryAnswer.Capital, correctAnswer);
-                            var summaryString = new SummaryString(summaryText, "Red");
-                            SummaryList.Add(summaryString);
-                        }
-                    }
-                    
+                    var summaryString = new SummaryString(summaryText, "Green");
+                    SummaryList.Add(summaryString);
+                }
+                else if (answer.Item1 == false)
+                {
+                   
+                    // Formats the string 
+                    string summaryText = string.Format("For {0} you answered {1}. Correct answer is {2}.",
+                        answer.Item2.Name, answer.Item3.Capital, answer.Item2.Capital);
+
+                    var summaryString = new SummaryString(summaryText, "Red");
+                    SummaryList.Add(summaryString);
                 }
             }
         }
         #endregion
-        
     }
 }

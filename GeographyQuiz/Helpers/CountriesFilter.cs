@@ -13,31 +13,11 @@ namespace GeographyQuiz
         /// <summary>
         /// Shuffles the array.
         /// </summary>
-        private Shuffler Shuffler { get; set; }
-        /// <summary>
-        /// Countries based on the difficulty level.
-        /// </summary>
-        private List<Country> CountriesBasedOnDifficulty { get; set; }
+        private Shuffler shuffler = new Shuffler();
         /// <summary>
         /// Countries to return.
         /// </summary>
-        private List<Country> CountriesForTheGame { get; set; }
-        #endregion
-        #region Constructor
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public CountriesFilter()
-        {
-            // Creates new lists
-            CountriesBasedOnDifficulty = new List<Country>();
-            CountriesForTheGame = new List<Country>();
-
-            // Initialize new shuffler 
-            Shuffler = new Shuffler();
-
-            
-        }
+        private List<Country> countriesList = new List<Country>();
         #endregion
         #region Public Methods
         /// <summary>
@@ -46,7 +26,7 @@ namespace GeographyQuiz
         /// <param name="numberOfElements">How many countries should be returned</param>
         /// <param name="countriesList">Countries to be returned</param>
         /// <returns></returns>
-        public List<Country> GetCountries(int numberOfElements, List<Country> countriesList)
+        public List<Country> GetCountries(int numberOfElements, List<Country> databaseCountries)
         {
             
             // Sets the difficulty level based on the number of questions
@@ -60,22 +40,22 @@ namespace GeographyQuiz
                 difficultyLevel = 1;
 
             // Shuffles the array 
-            int[] ChosenNumbers = Shuffler.Shuffle(numberOfElements+10);
+            int[] ChosenNumbers = shuffler.Shuffle(numberOfElements+10);
 
             // Adds every country based on the difficulty level
-            foreach (Country country in countriesList)
+            foreach (Country country in databaseCountries.ToList())
             {
-                if (country.DifficultyLevel <= difficultyLevel)
-                    CountriesBasedOnDifficulty.Add(country);
+                if (difficultyLevel >= country.DifficultyLevel)
+                    databaseCountries.Remove(country);
             }
 
             // Adds specified amount of countries to the game
             for (int i = 0; i < numberOfElements+10; i++)
             {
-                CountriesForTheGame.Add(CountriesBasedOnDifficulty.ElementAt(ChosenNumbers[i]));
+                countriesList.Add(databaseCountries.ElementAt(ChosenNumbers[i]));
             }
 
-            return CountriesForTheGame;
+            return countriesList;
         }
         #endregion
     }

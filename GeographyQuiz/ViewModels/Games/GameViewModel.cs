@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
@@ -8,6 +9,12 @@ namespace GeographyQuiz
     public class GameViewModel : BaseViewModel
     {
         #region Private Members
+        /// <summary>
+        /// Boolean is true if the user answered correctly,
+        /// Country is the question,
+        /// String is the user answer.
+        /// </summary>
+        private List<Tuple<bool, Country, Country>> answers = new List<Tuple<bool, Country, Country>>();
         /// <summary>
         /// List of countries from the database.
         /// </summary>
@@ -24,10 +31,6 @@ namespace GeographyQuiz
         /// Get the countries based on the difficulty level.
         /// </summary>
         private CountriesFilter countriesFilter = new CountriesFilter();
-        /// <summary>
-        /// Contains all the answers 
-        /// </summary>
-        private List<CountryAnswer> summaryList = new List<CountryAnswer>();
         #endregion
         #region Public Properties
         /// <summary>
@@ -41,7 +44,7 @@ namespace GeographyQuiz
         /// <summary>
         /// Correct answer for the current question.
         /// </summary>
-        public string CorrectAnswer { get; set; }
+        public Country CorrectAnswer { get; set; }
         /// <summary>
         /// Buttons on the screen.
         /// </summary>
@@ -81,7 +84,7 @@ namespace GeographyQuiz
             // Creates commands 
             AnswerCommand = new RelayParameterCommand((parameter) => CheckTheAnswer(parameter));
             BreakOverCommand = new RelayCommand(() => NextQuestion());
-            
+
             // Creates list of buttons 
             ListOfButtons = new List<Button>()
             {
@@ -100,6 +103,21 @@ namespace GeographyQuiz
         {
             // Casts the parameter as a string
             Button answer = (Button)parameter;
+            // Initialize 
+            string correctAnswerString = string.Empty;
+            Country userAnswer = new Country();
+
+            // Check the answer based on the game mode 
+            if (gameMode == GameMode.Capitals)
+            {
+                userAnswer = ListofCountries.Where(c => c.Name == answer.Content).FirstOrDefault();
+                correctAnswerString = CorrectAnswer.Name;
+            }
+            else
+            {
+                userAnswer = ListofCountries.Where(c => c.Capital == answer.Content).FirstOrDefault();
+                correctAnswerString = CorrectAnswer.Capital;
+            }
 
             // Color the buttons according to answers 
             foreach (var button in ListOfButtons)
@@ -110,76 +128,40 @@ namespace GeographyQuiz
                 if (button.Content == answer.Content)
                     button.IsSelected = true;
 
+
                 // Sets the color of buttons
-                if (button.IsSelected == true && button.Content == CorrectAnswer)
+                if (button.IsSelected == true && button.Content == correctAnswerString)
                     button.BackgroundColor = "Green";
-                else if (button.IsSelected == true && button.Content != CorrectAnswer)
+                else if (button.IsSelected == true && button.Content != correctAnswerString)
                     button.BackgroundColor = "Red";
-                else if (button.Content == CorrectAnswer)
+                else if (button.Content == correctAnswerString)
                     button.BackgroundColor = "Green";
                 else
                     button.BackgroundColor = "Blue";
             }
 
             // If the user's answer matcher the correct answer then he gets a point
-            if (answer.Content == CorrectAnswer)
+            if (answer.Content == correctAnswerString)
             {
                 // Decrease number of questions by 1
                 NumberOfQuestionsLeft--;
                 // Increase user score by one
                 NumberOfCorrectAnswers++;
                 // Adds the used country into summary, true because user was right
-                summaryList.Add(AddToSummary(answer.Content, true));
+                answers.Add(new Tuple<bool, Country, Country>(true, CorrectAnswer, userAnswer));
             }
             else
             {
                 // Decrease number of questions by 1
                 NumberOfQuestionsLeft--;
                 // Adds the used country into summary, false because user was wrong 
-                summaryList.Add(AddToSummary(answer.Content, false));
+                answers.Add(new Tuple<bool, Country, Country>(false, CorrectAnswer, userAnswer));
             }
         }
         /// <summary>
-        /// Adds the country to the summary
+        /// Starts the game based on the gamemode and difficulty mode.
         /// </summary>
-        /// <param name="countryName">Country name to be added</param>
-        /// <returns></returns>
-        private CountryAnswer AddToSummary(string answer, bool wasUserRight)
-        {
-            // Looks up for the country in the database
-            Country country = new Country();
-
-            // Creates new country answer and adds that to the summary list  
-            if (gameMode == GameMode.Capitals)
-            {
-                country = databaseCountries.Where(c => c.Name == CorrectAnswer).FirstOrDefault();
-                CountryAnswer countryAnswer = new CountryAnswer()
-                {
-                    Capital = country.Capital,
-                    Name = answer,
-                    WasUserRight = wasUserRight,
-                    GameMode = GameMode.Capitals
-
-                };
-                return countryAnswer;
-
-            }
-            else
-            {
-                country = databaseCountries.Where(c => c.Capital == CorrectAnswer).FirstOrDefault();
-                CountryAnswer countryAnswer = new CountryAnswer()
-                {
-                    Capital = answer,
-                    Name = country.Name,
-                    WasUserRight = wasUserRight,
-                    GameMode = GameMode.Countries
-                };
-
-                return countryAnswer;
-            }
-
-
-        }
+        /// <param name="message">Notification Message sent from the <see cref="DifficultyViewModel"/></param>
         private void StartGame(NotificationMessage<object[]> message)
         {
             // Continue if the message notification matches
@@ -209,26 +191,16 @@ namespace GeographyQuiz
                 // Break is over and buttons are now usable
                 IsBreakOn = false;
 
-                // Gets the buttons with content from helper class
-                var buttonsList = nextQuestion.NextQuestion(ListofCountries, gameMode, NumberOfQuestionsLeft);
+                // Gets the buttons with content from helper class and set the correct answer
+                Tuple<List<Button>, Country> questions = nextQuestion.GetQuestion(ListOfButtons, ListofCountries, gameMode, NumberOfQuestionsLeft);
+                ListOfButtons = questions.Item1;
+                CorrectAnswer = questions.Item2;
 
-                // Assign content of buttons
-                for (int i = 0; i < 4; i++)
-                {
-                    ListOfButtons[i].BackgroundColor = buttonsList[i].BackgroundColor;
-                    ListOfButtons[i].Content = buttonsList[i].Content;
-                    ListOfButtons[i].IsCorrect = buttonsList[i].IsCorrect;
-                    ListOfButtons[i].IsSelected = buttonsList[i].IsSelected;
-
-                    if (ListOfButtons[i].IsCorrect == true)
-                        CorrectAnswer = ListOfButtons[i].Content;
-                }
-
-                // Sets the correct answer based on the gamemode
+                // Removes the country from the list of questions
                 if (gameMode == GameMode.Capitals)
-                    ListofCountries.Remove(ListofCountries.Where(c => c.Name == CorrectAnswer).FirstOrDefault());
-                else if (gameMode == GameMode.Countries)
-                    ListofCountries.Remove(ListofCountries.Where(c => c.Capital == CorrectAnswer).FirstOrDefault());
+                    ListofCountries.Remove(CorrectAnswer);
+                else
+                    ListofCountries.Remove(CorrectAnswer);
 
                 // Sets the question string based on the gamemode
                 Question = nextQuestion.QuestionString;
@@ -238,7 +210,8 @@ namespace GeographyQuiz
                 // Changes the page to summary
                 ChangePage(ApplicationPage.SummaryPage);
                 // Sends the message to the SummaryViewModel
-                MessengerInstance.Send(new NotificationMessage<List<CountryAnswer>>(summaryList, "Summary"));
+                MessengerInstance.Send(new NotificationMessage<GameMode>(gameMode, "GameModeSummary"));
+                MessengerInstance.Send(new NotificationMessage<List<Tuple<bool, Country, Country>>>(answers, "Summary"));
             }
         }
         #endregion

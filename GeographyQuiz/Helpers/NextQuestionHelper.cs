@@ -1,5 +1,6 @@
 ﻿
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,6 +13,10 @@ namespace GeographyQuiz
         /// Shuffles the arrays.
         /// </summary>
         private Shuffler shuffler = new Shuffler();
+        /// <summary>
+        /// Current questions to be placed in the buttons.
+        /// </summary>
+        private List<Country> currentQuestions = new List<Country>();
         #endregion
         #region Public Properties
         public string QuestionString { get; set; }
@@ -24,72 +29,62 @@ namespace GeographyQuiz
         /// <param name="gameMode">Mode of the game</param>
         /// <param name="numberOfQuestionsLeft">How many questions user has yet to answer</param>
         /// <returns></returns>
-        public  List<Button> NextQuestion(List<Country> countries, GameMode gameMode, int numberOfQuestionsLeft)
+        public Tuple<List<Button>, Country> GetQuestion(List<Button> buttons, List<Country> countries, GameMode gameMode, int numberOfQuestionsLeft)
         {
-            // Creates new list of buttons
-            List<Button> ButtonList = new List<Button>()
-            {
-                new Button{ },
-                new Button{ },
-                new Button{ },
-                new Button{ }
-            };
-            
-            List<Country> CurrentQuestions = new List<Country>();
-
             // Random numbers 
             int[] ChosenNumbers = shuffler.Shuffle(numberOfQuestionsLeft + 10);
 
             // Adds 4 countries to the current question 
             for (int i = 0; i < 4; i++)
             {
-                CurrentQuestions.Add(countries.ElementAt(ChosenNumbers[i]));
+                currentQuestions.Add(countries.ElementAt(ChosenNumbers[i]));
             }
 
             int[] Questions = shuffler.Shuffle(4);
 
             // Correct answer is also random
-            var CorrectAnswer = CurrentQuestions.ElementAt(Questions[shuffler.RandomNumber.Next(0, 3)]);
+            var CorrectAnswer = currentQuestions.ElementAt(Questions[shuffler.RandomNumber.Next(0, 3)]);
             
-            
-
+            // Change the buttons content based on the gamemode
             if (gameMode == GameMode.Capitals)
             {
                 // Changes the button content and selects the true answer
                 for (int j = 0; j < 4; j++)
                 {
                     // Resets the values for buttons
-                    ButtonReset(ButtonList[j]);
+                    ButtonReset(buttons[j]);
 
                     // Changes the button content
-                    ButtonList[j].Content = CurrentQuestions.ElementAt(Questions[j]).Name;
+                    buttons[j].Content = currentQuestions.ElementAt(Questions[j]).Name;
 
                     // Selects button with correct answer
-                    if (ButtonList[j].Content == CorrectAnswer.Name)
-                        ButtonList[j].IsCorrect = true;
+                    if (buttons[j].Content == CorrectAnswer.Name)
+                        buttons[j].IsCorrect = true;
                 }
 
                 QuestionString = string.Format("{0} to stolica, którego kraju?", CorrectAnswer.Capital);
             }
             else if (gameMode == GameMode.Countries)
             {
-
                 // Changes the button content and selects the true answer
                 for (int j = 0; j < 4; j++)
                 {
                     // Resets the values for buttons
-                    ButtonReset(ButtonList[j]);
+                    ButtonReset(buttons[j]);
 
                     // Changes the button content
-                    ButtonList[j].Content = CurrentQuestions.ElementAt(Questions[j]).Capital;
+                    buttons[j].Content = currentQuestions.ElementAt(Questions[j]).Capital;
 
                     // Selects button with correct answer
-                    if (ButtonList[j].Content == CorrectAnswer.Capital)
-                        ButtonList[j].IsCorrect = true;
+                    if (buttons[j].Content == CorrectAnswer.Capital)
+                        buttons[j].IsCorrect = true;
                 }
                 QuestionString = string.Format("Stolicą państwa {0} jest?", CorrectAnswer.Name);
             }
-            return ButtonList;
+
+            // Clears current questions list
+            currentQuestions.Clear();
+            return new Tuple<List<Button>, Country>(buttons, CorrectAnswer);
         }
 
         #endregion
