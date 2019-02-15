@@ -40,9 +40,7 @@ namespace GeographyQuiz
         {
             // Checks if the notificaion matches
             if (message.Notification == "GameChosen")
-            {
                 gameSettings = message.Content;
-            }
         }
         /// <summary>
         /// Sends the information to the <see cref="GameListViewModel"/> about game mode and difficulty.

@@ -19,7 +19,6 @@ namespace GeographyQuiz
         {
             // Creates commands
             GameChosenCommand = new RelayParameterCommand((parameter) => GameChosen(parameter));
-           
         }
         #endregion
         #region Private Methods
@@ -35,13 +34,13 @@ namespace GeographyQuiz
             // Adds the chosen gamemode to the array
             if (parameter as string == "Capitals")
                 gameChosen[0] = GameMode.Capitals;
-            else if (parameter as string == "Countries")
+            else 
                 gameChosen[0] = GameMode.Countries;
 
             // Changes the current page
             ChangePage(ApplicationPage.DifficultyPage);
 
-            // Sends the message to the GameViewModel
+            // Sends the message to the DifficultyViewModel
             MessengerInstance.Send(new NotificationMessage<object[]>(gameChosen, "GameChosen"));
 
         }

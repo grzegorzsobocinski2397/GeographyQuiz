@@ -14,24 +14,19 @@ namespace GeographyQuiz
     {
         #region Private Members
         /// <summary>
-        /// Connection string to the local database
+        /// Connection string to the local database.
         /// </summary>
-        private readonly string connectionString = GeographyQuiz.Properties.Settings.Default.GeographyQuizDBConnectionString;
+        private static readonly string connectionString = GeographyQuiz.Properties.Settings.Default.GeographyQuizDBConnectionString;
         #endregion
-        #region Public Properties
+        #region Public Methods
         /// <summary>
-        /// Contains all the countries from the local database 
+        /// Gets all the countries from the database.
         /// </summary>
-        public List<Country> CountriesList { get; set; }
-        #endregion
-        #region Constructor
-        /// <summary>
-        /// Initializes a new instance of the MainViewModel class.
-        /// </summary>
-        public BaseViewModel()
+        /// <returns></returns>
+        public static List<Country> GetCountries()
         {
-            // Creates new Observable Collection of countries
-            CountriesList = new List<Country>();
+            // Creates new countries list 
+            List<Country> CountriesList = new List<Country>();
 
             // Create new datatable 
             DataTable CountriesTable = new DataTable();
@@ -59,15 +54,15 @@ namespace GeographyQuiz
                         Capital = row.ItemArray.GetValue(2).ToString(),
                         DifficultyLevel = int.Parse(row.ItemArray.GetValue(3).ToString()),
                         Region = row.ItemArray.GetValue(4).ToString(),
-
                     };
 
                     // Adds the country to the ObservableCollection
                     CountriesList.Add(country);
                 }
             }
-        }
 
+            return CountriesList;
+        }
         /// <summary>
         /// Changes the current page of the main window 
         /// </summary>

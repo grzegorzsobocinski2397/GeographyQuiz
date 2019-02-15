@@ -9,10 +9,13 @@ namespace GeographyQuiz
     {
         #region Private Members
         /// <summary>
-        /// Next question helper class
+        /// List of countries from the database.
+        /// </summary>
+        private static List<Country> databaseCountries = GetCountries();
+        /// <summary>
+        /// Next question helper class.
         /// </summary>
         private NextQuestionHelper nextQuestion = new NextQuestionHelper();
-
         /// <summary>
         /// Current game mode.
         /// </summary>
@@ -50,7 +53,7 @@ namespace GeographyQuiz
         /// <summary>
         /// Contains countries chosen by random on the difficulty level specified before.
         /// </summary>
-        public List<Country> CountriesForTheGame { get; set; }
+        public List<Country> ListofCountries { get; set; }
         /// <summary>
         /// Question for the user.
         /// </summary>
@@ -72,13 +75,12 @@ namespace GeographyQuiz
         /// </summary>
         public GameViewModel()
         {
-            // Creates Lists and Observable Collections
-            CountriesForTheGame = new List<Country>();
+            // Initialize countries list
+            ListofCountries = new List<Country>();
 
             // Creates commands 
             AnswerCommand = new RelayParameterCommand((parameter) => CheckTheAnswer(parameter));
             BreakOverCommand = new RelayCommand(() => NextQuestion());
-
             
             // Creates list of buttons 
             ListOfButtons = new List<Button>()
@@ -150,7 +152,7 @@ namespace GeographyQuiz
             // Creates new country answer and adds that to the summary list  
             if (gameMode == GameMode.Capitals)
             {
-                country = CountriesList.Where(c => c.Name == CorrectAnswer).FirstOrDefault();
+                country = databaseCountries.Where(c => c.Name == CorrectAnswer).FirstOrDefault();
                 CountryAnswer countryAnswer = new CountryAnswer()
                 {
                     Capital = country.Capital,
@@ -164,7 +166,7 @@ namespace GeographyQuiz
             }
             else
             {
-                country = CountriesList.Where(c => c.Capital == CorrectAnswer).FirstOrDefault();
+                country = databaseCountries.Where(c => c.Capital == CorrectAnswer).FirstOrDefault();
                 CountryAnswer countryAnswer = new CountryAnswer()
                 {
                     Capital = answer,
@@ -190,7 +192,7 @@ namespace GeographyQuiz
                 gameMode = (GameMode)message.Content[0];
 
                 // Gets the countries based on the difficulty level and game mode
-                CountriesForTheGame = countriesFilter.GetCountries(NumberOfQuestionsLeft, CountriesList);
+                ListofCountries = countriesFilter.GetCountries(NumberOfQuestionsLeft, databaseCountries);
 
                 // Begins with the first question
                 NextQuestion();
@@ -208,7 +210,7 @@ namespace GeographyQuiz
                 IsBreakOn = false;
 
                 // Gets the buttons with content from helper class
-                var buttonsList = nextQuestion.NextQuestion(CountriesForTheGame, gameMode, NumberOfQuestionsLeft);
+                var buttonsList = nextQuestion.NextQuestion(ListofCountries, gameMode, NumberOfQuestionsLeft);
 
                 // Assign content of buttons
                 for (int i = 0; i < 4; i++)
@@ -224,9 +226,9 @@ namespace GeographyQuiz
 
                 // Sets the correct answer based on the gamemode
                 if (gameMode == GameMode.Capitals)
-                    CountriesForTheGame.Remove(CountriesForTheGame.Where(c => c.Name == CorrectAnswer).FirstOrDefault());
+                    ListofCountries.Remove(ListofCountries.Where(c => c.Name == CorrectAnswer).FirstOrDefault());
                 else if (gameMode == GameMode.Countries)
-                    CountriesForTheGame.Remove(CountriesForTheGame.Where(c => c.Capital == CorrectAnswer).FirstOrDefault());
+                    ListofCountries.Remove(ListofCountries.Where(c => c.Capital == CorrectAnswer).FirstOrDefault());
 
                 // Sets the question string based on the gamemode
                 Question = nextQuestion.QuestionString;
