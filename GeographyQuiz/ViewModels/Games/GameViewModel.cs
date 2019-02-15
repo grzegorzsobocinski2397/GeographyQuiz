@@ -12,14 +12,15 @@ namespace GeographyQuiz
         /// Next question helper class
         /// </summary>
         private NextQuestionHelper nextQuestion = new NextQuestionHelper();
+
         /// <summary>
         /// Current game mode.
         /// </summary>
-        private string gameMode = string.Empty;
+        private GameMode gameMode = GameMode.None;
         /// <summary>
         /// Get the countries based on the difficulty level.
         /// </summary>
-        private GetCountriesHelper GetCountriesHelper = new GetCountriesHelper();
+        private CountriesFilter countriesFilter = new CountriesFilter();
         /// <summary>
         /// Contains all the answers 
         /// </summary>
@@ -31,10 +32,6 @@ namespace GeographyQuiz
         /// </summary>
         public int NumberOfQuestionsLeft { get; set; }
         /// <summary>
-        /// Informs the user of his current score and how many questions he has yet to answer
-        /// </summary>
-        public string ScoreInformation { get; set; }
-        /// <summary>
         /// Number of questions answered correctly.
         /// </summary>
         public int NumberOfCorrectAnswers { get; set; }
@@ -42,11 +39,10 @@ namespace GeographyQuiz
         /// Correct answer for the current question.
         /// </summary>
         public string CorrectAnswer { get; set; }
+        /// <summary>
+        /// Buttons on the screen.
+        /// </summary>
         public List<Button> ListOfButtons { get; set; }
-        public Button FirstButton { get; set; }
-        public Button SecondButton { get; set; }
-        public Button ThirdButton { get; set; }
-        public Button FourthButton { get; set; }
         /// <summary>
         /// True if user answered a question.
         /// </summary>
@@ -83,23 +79,18 @@ namespace GeographyQuiz
             AnswerCommand = new RelayParameterCommand((parameter) => CheckTheAnswer(parameter));
             BreakOverCommand = new RelayCommand(() => NextQuestion());
 
-            // Creates new buttons 
-            FirstButton = new Button();
-            SecondButton = new Button();
-            ThirdButton = new Button();
-            FourthButton = new Button();
-
-            // Insert these buttons into a list so it's easier to reset them
+            
+            // Creates list of buttons 
             ListOfButtons = new List<Button>()
             {
-                FirstButton,
-                SecondButton,
-                ThirdButton,
-                FourthButton
+                new Button(),
+                new Button(),
+                new Button(),
+                new Button(),
             };
 
             // Registers the message 
-            MessengerInstance.Register<NotificationMessage<string[]>>(this, StartGame);
+            MessengerInstance.Register<NotificationMessage<object[]>>(this, StartGame);
         }
         #endregion
         #region Private Methods
@@ -157,7 +148,7 @@ namespace GeographyQuiz
             Country country = new Country();
 
             // Creates new country answer and adds that to the summary list  
-            if (gameMode == "Capitals")
+            if (gameMode == GameMode.Capitals)
             {
                 country = CountriesList.Where(c => c.Name == CorrectAnswer).FirstOrDefault();
                 CountryAnswer countryAnswer = new CountryAnswer()
@@ -165,7 +156,7 @@ namespace GeographyQuiz
                     Capital = country.Capital,
                     Name = answer,
                     WasUserRight = wasUserRight,
-                    GameMode = gameMode
+                    GameMode = GameMode.Capitals
 
                 };
                 return countryAnswer;
@@ -179,7 +170,7 @@ namespace GeographyQuiz
                     Capital = answer,
                     Name = country.Name,
                     WasUserRight = wasUserRight,
-                    GameMode = gameMode
+                    GameMode = GameMode.Countries
                 };
 
                 return countryAnswer;
@@ -187,19 +178,19 @@ namespace GeographyQuiz
 
 
         }
-        private void StartGame(NotificationMessage<string[]> message)
+        private void StartGame(NotificationMessage<object[]> message)
         {
             // Continue if the message notification matches
             if (message.Notification == "DifficultyChosen")
             {
                 // Number of questions is equivalent to the difficulty level
-                NumberOfQuestionsLeft = int.Parse(message.Content[1]);
+                NumberOfQuestionsLeft = int.Parse((string)message.Content[1]);
 
                 // Sets the current game mode
-                gameMode = message.Content[0];
+                gameMode = (GameMode)message.Content[0];
 
                 // Gets the countries based on the difficulty level and game mode
-                CountriesForTheGame = GetCountriesHelper.GetCountries(NumberOfQuestionsLeft, CountriesList);
+                CountriesForTheGame = countriesFilter.GetCountries(NumberOfQuestionsLeft, CountriesList);
 
                 // Begins with the first question
                 NextQuestion();
@@ -215,9 +206,6 @@ namespace GeographyQuiz
             {
                 // Break is over and buttons are now usable
                 IsBreakOn = false;
-
-                // Informs the user of his current score 
-                ScoreInformation = string.Format("Pozostało {0} pytań, odpowiedziałeś poprawnie na {1}.", NumberOfQuestionsLeft, NumberOfCorrectAnswers);
 
                 // Gets the buttons with content from helper class
                 var buttonsList = nextQuestion.NextQuestion(CountriesForTheGame, gameMode, NumberOfQuestionsLeft);
@@ -235,9 +223,9 @@ namespace GeographyQuiz
                 }
 
                 // Sets the correct answer based on the gamemode
-                if (gameMode == "Capitals")
+                if (gameMode == GameMode.Capitals)
                     CountriesForTheGame.Remove(CountriesForTheGame.Where(c => c.Name == CorrectAnswer).FirstOrDefault());
-                else if (gameMode == "Countries")
+                else if (gameMode == GameMode.Countries)
                     CountriesForTheGame.Remove(CountriesForTheGame.Where(c => c.Capital == CorrectAnswer).FirstOrDefault());
 
                 // Sets the question string based on the gamemode

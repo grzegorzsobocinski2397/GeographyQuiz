@@ -112,13 +112,14 @@
     <Compile Include="DataModels\Button.cs" />
     <Compile Include="DataModels\Country.cs" />
     <Compile Include="DataModels\CountryAnswer.cs" />
+    <Compile Include="DataModels\Modes\GameMode.cs" />
     <Compile Include="DataModels\SummaryString.cs" />
     <Compile Include="GeographyQuizDBDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>GeographyQuizDBDataSet.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\GetCountriesHelper.cs" />
+    <Compile Include="Helpers\CountriesFilter.cs" />
     <Compile Include="Helpers\Shuffler.cs" />
     <Compile Include="Pages\BasePage.cs" />
     <Compile Include="Pages\ChooseGamePage.xaml.cs">

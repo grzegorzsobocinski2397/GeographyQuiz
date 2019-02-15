@@ -16,15 +16,6 @@ namespace GeographyQuiz
         #region Public Properties
         public string QuestionString { get; set; }
         #endregion
-        #region Constructor
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public NextQuestionHelper()
-        {
-
-        }
-        #endregion
         #region Public Methods
         /// <summary>
         /// Returns buttons with random countries and one button with correct answer.
@@ -33,7 +24,7 @@ namespace GeographyQuiz
         /// <param name="gameMode">Mode of the game</param>
         /// <param name="numberOfQuestionsLeft">How many questions user has yet to answer</param>
         /// <returns></returns>
-        public List<Button> NextQuestion(List<Country> countries, string gameMode, int numberOfQuestionsLeft)
+        public  List<Button> NextQuestion(List<Country> countries, GameMode gameMode, int numberOfQuestionsLeft)
         {
             // Creates new list of buttons
             List<Button> ButtonList = new List<Button>()
@@ -62,7 +53,7 @@ namespace GeographyQuiz
             
             
 
-            if (gameMode == "Capitals")
+            if (gameMode == GameMode.Capitals)
             {
                 // Changes the button content and selects the true answer
                 for (int j = 0; j < 4; j++)
@@ -80,7 +71,7 @@ namespace GeographyQuiz
 
                 QuestionString = string.Format("{0} to stolica, którego kraju?", CorrectAnswer.Capital);
             }
-            else if (gameMode == "Countries")
+            else if (gameMode == GameMode.Countries)
             {
 
                 // Changes the button content and selects the true answer

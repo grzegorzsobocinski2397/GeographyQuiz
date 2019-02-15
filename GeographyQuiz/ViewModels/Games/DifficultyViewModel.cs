@@ -8,9 +8,9 @@ namespace GeographyQuiz
 
         #region Private Members
         /// <summary>
-        /// Contains information about the game and game difficulty that user chose.
+        /// Current game settings
         /// </summary>
-        private string[] GameSettings { get; set; } 
+        private object[] gameSettings = new object[2];
         #endregion
         #region Commands
         /// <summary>
@@ -24,14 +24,11 @@ namespace GeographyQuiz
         /// </summary>
         public DifficultyViewModel()
         {
-            // Initialize the array
-            GameSettings = new string[2];
-
             // Creates commands
             DifficultyCommand = new RelayParameterCommand((parameter) => StartGame(parameter));
 
             // Registers the messages
-            MessengerInstance.Register<NotificationMessage<string[]>>(this, GameChosen);
+            MessengerInstance.Register<NotificationMessage<object[]>>(this, GameChosen);
         }
         #endregion
         #region Private Methods
@@ -39,12 +36,12 @@ namespace GeographyQuiz
         /// Catches the notification from the <see cref="ChooseGameViewModel"/>.
         /// </summary>
         /// <param name="message">Array that contains the information about game mode.</param>
-        private void GameChosen(NotificationMessage<string[]> message)
+        private void GameChosen(NotificationMessage<object[]> message)
         {
             // Checks if the notificaion matches
-            if(message.Notification == "GameChosen")
+            if (message.Notification == "GameChosen")
             {
-                GameSettings = message.Content;
+                gameSettings = message.Content;
             }
         }
         /// <summary>
@@ -53,14 +50,14 @@ namespace GeographyQuiz
         /// <param name="parameter">Game difficulty.</param>
         private void StartGame(object parameter)
         {
-            // Adds the difficulty level to the array
-            GameSettings[1] = parameter as string;
-            
+            // Casts the difficulty mode into string
+            gameSettings[1] = parameter as string;
+
             ChangePage(ApplicationPage.GamePage);
 
             // Sends the difficulty level inside MVVM Light notification message to the CapitalsViewModel
-            MessengerInstance.Send(new NotificationMessage<string[]>(GameSettings, "DifficultyChosen"));
-            
+            MessengerInstance.Send(new NotificationMessage<object[]>(gameSettings, "DifficultyChosen"));
+
         }
         #endregion
     }

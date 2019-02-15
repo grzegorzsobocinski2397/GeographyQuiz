@@ -7,7 +7,7 @@ namespace GeographyQuiz
     /// <summary>
     /// Returns specified amount of countries
     /// </summary>
-    public class GetCountriesHelper
+    public class CountriesFilter
     {
         #region Private Members
         /// <summary>
@@ -27,7 +27,7 @@ namespace GeographyQuiz
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public GetCountriesHelper()
+        public CountriesFilter()
         {
             // Creates new lists
             CountriesBasedOnDifficulty = new List<Country>();
@@ -35,6 +35,8 @@ namespace GeographyQuiz
 
             // Initialize new shuffler 
             Shuffler = new Shuffler();
+
+            
         }
         #endregion
         #region Public Methods

@@ -11,7 +11,7 @@ namespace GeographyQuiz
         /// <summary>
         /// Game mode on which game was played
         /// </summary>
-        private string gameMode;
+        private GameMode gameMode;
         #endregion
         #region Public Properties
         /// <summary>
@@ -25,7 +25,7 @@ namespace GeographyQuiz
         /// <summary>
         /// Game mode on which game was played
         /// </summary>
-        public string GameMode
+        public GameMode GameMode
         {
             get { return gameMode; }
             set { gameMode = value; }
@@ -38,7 +38,7 @@ namespace GeographyQuiz
         /// </summary>
         public CountryAnswer()
         {
-            GameMode = string.Empty;
+            GameMode = GameMode.None;
             WasUserRight = false;
         }
         #endregion

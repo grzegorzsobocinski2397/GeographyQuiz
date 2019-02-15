@@ -45,40 +45,40 @@
             <Button
                 Grid.Row="0"
                 Grid.Column="0"
-                Background="{Binding FirstButton.BackgroundColor, Converter={local:StringToBackgroundColorConverter}}"
+                Background="{Binding ListOfButtons[0].BackgroundColor, Converter={local:StringToBackgroundColorConverter}}"
                 Command="{Binding AnswerCommand}"
-                CommandParameter="{Binding FirstButton}"
-                Content="{Binding FirstButton.Content}"
+                CommandParameter="{Binding ListOfButtons[0]}"
+                Content="{Binding ListOfButtons[0].Content}"
                 Style="{DynamicResource BaseButton}" />
 
             <!--  Second question  -->
             <Button
                 Grid.Row="1"
                 Grid.Column="0"
-                Background="{Binding SecondButton.BackgroundColor, Converter={local:StringToBackgroundColorConverter}}"
+                Background="{Binding ListOfButtons[1].BackgroundColor, Converter={local:StringToBackgroundColorConverter}}"
                 Command="{Binding AnswerCommand}"
-                CommandParameter="{Binding SecondButton}"
-                Content="{Binding SecondButton.Content}"
+                CommandParameter="{Binding ListOfButtons[1]}"
+                Content="{Binding ListOfButtons[1].Content}"
                 Style="{DynamicResource BaseButton}" />
 
             <!--  Third question  -->
             <Button
                 Grid.Row="0"
                 Grid.Column="1"
-                Background="{Binding ThirdButton.BackgroundColor, Converter={local:StringToBackgroundColorConverter}}"
+                Background="{Binding ListOfButtons[2].BackgroundColor, Converter={local:StringToBackgroundColorConverter}}"
                 Command="{Binding AnswerCommand}"
-                CommandParameter="{Binding ThirdButton}"
-                Content="{Binding ThirdButton.Content}"
+                CommandParameter="{Binding ListOfButtons[2]}"
+                Content="{Binding ListOfButtons[2].Content}"
                 Style="{DynamicResource BaseButton}" />
 
             <!--  Fourth question  -->
             <Button
                 Grid.Row="1"
                 Grid.Column="1"
-                Background="{Binding FourthButton.BackgroundColor, Converter={local:StringToBackgroundColorConverter}}"
+                Background="{Binding ListOfButtons[3].BackgroundColor, Converter={local:StringToBackgroundColorConverter}}"
                 Command="{Binding AnswerCommand}"
-                CommandParameter="{Binding FourthButton}"
-                Content="{Binding FourthButton.Content}"
+                CommandParameter="{Binding ListOfButtons[3]}"
+                Content="{Binding ListOfButtons[3].Content}"
                 Style="{DynamicResource BaseButton}" />
         </Grid>
 
@@ -88,9 +88,10 @@
             Margin="0,0,0,30"
             FontSize="{StaticResource FontSizeSmall}"
             Foreground="Black"
-            Text="{Binding ScoreInformation}"
             TextAlignment="Center"
-            TextWrapping="WrapWithOverflow" />
+            TextWrapping="WrapWithOverflow">
+            <Run Text="Pozostało " /><Run Text="{Binding NumberOfQuestionsLeft, StringFormat='{}{0} pytań, odpowiedziałeś poprawnie na '}" /><Run Text="{Binding NumberOfCorrectAnswers, StringFormat='{}{0}. '}" />
+        </TextBlock>
 
 
         <!--  Invisible border that needs to be clicked if user wants to proceed to next question  -->

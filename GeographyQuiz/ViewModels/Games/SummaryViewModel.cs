@@ -46,7 +46,7 @@ namespace GeographyQuiz
                 // Creates summary string from every answer 
                 foreach (var countryAnswer in message.Content)
                 {
-                    if(countryAnswer.GameMode == "Capitals")
+                    if(countryAnswer.GameMode == GameMode.Capitals)
                     {
                         if (countryAnswer.WasUserRight == true)
                         {
@@ -72,7 +72,7 @@ namespace GeographyQuiz
                             SummaryList.Add(summaryString);
                         }
                     }
-                    else if (countryAnswer.GameMode == "Countries")
+                    else if (countryAnswer.GameMode == GameMode.Countries)
                     {
                         if (countryAnswer.WasUserRight == true)
                         {
